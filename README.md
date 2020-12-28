@@ -105,5 +105,4 @@ Thanks goes to these wonderful people:
 
 
 ## **Thank You**
-Made with Love ❤️️  &  Passion 🙏.
-> Like the project?? Give us a star ⭐. Have a nice day!
+> Made with Love ❤️️  &  Passion 🙏.
