@@ -72,7 +72,7 @@ $ git commit -m "add any comment"
 - Navigate to the original repository and make a pull request -->
 
 
-## Project administrators ✨
+<!-- ## Project administrators ✨ -->
 
 <!-- Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)): -->
 
@@ -80,7 +80,7 @@ $ git commit -m "add any comment"
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-<table>
+<!-- <table>
   <tbody>
     <tr>
       <td align="center">
@@ -94,7 +94,7 @@ $ git commit -m "add any comment"
       </td>
     </tr>
   </tbody>
-</table>
+</table> -->
 
 <!-- ## Beloved Contributors ✨
 
