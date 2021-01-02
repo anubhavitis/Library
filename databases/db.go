@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -8,7 +8,7 @@ import (
 //InitDb funtion
 func InitDb() (*sql.DB, error) {
 
-	dab, err := sql.Open("mysql", "sql12349917:VEDK9mPCkq@(sql12.freemysqlhosting.net)/sql12349917?parseTime=true")
+	dab, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/test")
 	if err != nil {
 		fmt.Println("Error at opening database")
 		return nil, err
