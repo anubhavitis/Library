@@ -1,4 +1,4 @@
-package auth
+package authfuncs
 
 import (
 	"net/http"
@@ -105,6 +105,3 @@ func ReadCookie(r *http.Request) (map[string]string, error) {
 	}
 	return nil, nil
 }
-
-//LoginForm ..
-// func LoginForm(w)
