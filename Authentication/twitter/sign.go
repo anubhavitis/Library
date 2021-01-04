@@ -1,48 +1,51 @@
-package twitter
+package main
 
-import "os"
+import (
+	"fmt"
+	"net/http"
+	"os"
 
-var key = os.Getenv("Twitter_Key")
-var secret = os.Getenv("Twitter_Secret")
+	"github.com/dghubble/oauth1"
+	twauth "github.com/dghubble/oauth1/twitter"
+)
 
-var Config := &oauth2.Config{
-	ConsumerKey:    key,
-	ConsumerSecret: secret,
-	CallbackURL:    "http://localhost:8080/twitter/callback",
-	Endpoint:       twitterOAuth1.AuthorizeEndpoint,
+var consumerKey = os.Getenv("Twitter_Key")
+var consumerSecret = os.Getenv("Twitter_Secret")
+var requestSecret, requestToken string
+var err error
+
+var config = oauth1.Config{
+	ConsumerKey:    consumerKey,
+	ConsumerSecret: consumerSecret,
+	CallbackURL:    "http://localhost:8000/twitter/callback",
+	Endpoint:       twauth.AuthorizeEndpoint,
 }
 
-func LoginHandler(w http.ResponseWriter, r *http.Request){
-	ctx:= r.Context();
-	requestToken, _, err := RequestTokenFromContext(ctx)
+func TwitterLoginHandler(w http.ResponseWriter, r *http.Request) {
+	requestToken, requestSecret, err = config.RequestToken()
 	if err != nil {
-		fmt.Println("err1",err)
+		fmt.Println("error while generating request token", err)
 	}
-	authorizationURL, err := config.AuthorizationURL(requestToken)
-	if err != nil {
-		fmt.Println("err2",err)
-
+	authorizationURL, errr := config.AuthorizationURL(requestToken)
+	fmt.Println(authorizationURL.String())
+	if errr != nil {
+		fmt.Println("err2", errr)
 	}
-	http.Redirect(w, req, authorizationURL.String(), http.StatusFound)
-
+	http.Redirect(w, r, authorizationURL.String(), 302)
 }
-// profileHandler shows a personal profile or a login button.
-func profileHandler(w http.ResponseWriter, req *http.Request) {
-	session, err := sessionStore.Get(req, sessionName)
+
+func TwitterCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	checkToken, verifier, err := oauth1.ParseAuthorizationCallback(r)
 	if err != nil {
-		page, _ := ioutil.ReadFile("home.html")
-		fmt.Fprintf(w, string(page))
+		fmt.Println("error while verifying:", err)
 		return
 	}
 
-	// authenticated profile
-	fmt.Fprintf(w, `<p>You are logged in %s!</p><form action="/logout" method="post"><input type="submit" value="Logout"></form>`, session.Values[sessionUsername])
-}
-
-// logoutHandler destroys the session on POSTs and redirects to home.
-func logoutHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == "POST" {
-		sessionStore.Destroy(w, sessionName)
+	accessToken, accessSecret, err := config.AccessToken(checkToken, "checkSecret", verifier)
+	if err != nil {
+		fmt.Println("Access token not generated:", err)
+		return
 	}
-	http.Redirect(w, req, "/", http.StatusFound)
+	fmt.Println(accessSecret, accessToken)
+	w.Write([]byte("okay"))
 }
