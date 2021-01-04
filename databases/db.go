@@ -9,21 +9,23 @@ import (
 
 //Member Structure
 type Member struct {
-	UID     string
-	Fname   string
-	Lname   string
-	Time    string
-	Email   string
-	College string
+	UID      string `json:"uid"`
+	UserName string `json:"username"`
+	Fname    string `json:"fname"`
+	Lname    string `json:"lname"`
+	Time     string `json:"time"`
+	Email    string `json:"email"`
+	College  string `json:"college"`
+	Password string `json:"password"`
 }
 
 //Book strucuture
 type Book struct {
-	UID         string
-	Name        string
-	Author      string
-	Genre       string
-	Description string
+	UID         string `json:"uid"`
+	Name        string `json:"name"`
+	Author      string `json:"author"`
+	Genre       string `json:"genre"`
+	Description string `json:"description"`
 }
 
 //GenerateUUID ..
@@ -35,7 +37,7 @@ func GenerateUUID() string {
 //InitDb funtion
 func InitDb() (*sql.DB, error) {
 
-	dab, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/test")
+	dab, err := sql.Open("mysql", "anubhavitis:anubhh@v123@tcp(127.0.0.1:3306)/library")
 	if err != nil {
 		fmt.Println("Error at opening database")
 		return nil, err
@@ -49,52 +51,103 @@ func InitDb() (*sql.DB, error) {
 
 //CreateMemberTable function
 func CreateMemberTable(db *sql.DB) error {
-
-	if _, err := db.Exec("DROP TABLE users"); err != nil {
-		return err
-	}
-
 	queryUsers := `
-	CREATE TABLE users (
+	CREATE TABLE IF NOT EXISTS
+	users (
 		id INT PRIMARY KEY AUTO_INCREMENT,
+		username varchar(255),
 		fname varchar(255),
 		lname varchar(255),
-		created_at timestamp,
-		email email,
+		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		email varchar(255),
 		college varchar(255),
+		password varchar(255)
 	);
-	CREATE INDEX users_index_0 ON users (email);
-	CREATE INDEX users_index_1 ON users (college);
 	`
 
 	if _, err := db.Exec(queryUsers); err != nil {
 		return err
 	}
+	fmt.Println("Users Created!")
 	return nil
 }
 
 //CreateBooksTable function
 func CreateBooksTable(db *sql.DB) error {
-
-	if _, err := db.Exec("DROP TABLE books"); err != nil {
-		return err
-	}
-
-	queryBooks := `CREATE TABLE books (
-		id int PRIMARY KEY AUTO_INCREMENT,
+	queryBooks := `
+	CREATE TABLE IF NOT EXISTS
+	books (
+		id INT PRIMARY KEY AUTO_INCREMENT,
 		name varchar(255),
 		author varchar(255),
 		genre varchar(255),
-		description varchar(255),
-	  );
-	  
-	  	ALTER TABLE books ADD FOREIGN KEY (author) REFERENCES users (id);
-		CREATE INDEX books_index_2 ON books (author);
-		CREATE INDEX books_index_3 ON books (genre);`
+		description varchar(500)
+	);
+	`
 
 	if _, err := db.Exec(queryBooks); err != nil {
+		fmt.Println("Books can not be created!")
 		return err
 	}
+	fmt.Println("Books Created!")
 	return nil
+}
 
+//FindEmail finds user with particular email, and returns it
+func FindEmail(db *sql.DB, email string) (Member, error) {
+	var User Member
+
+	query := `Select * from users where email=?`
+	res, e := db.Query(query, email)
+
+	if e != nil {
+		return User, e
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password); err != nil {
+			return User, err
+		}
+	}
+
+	return User, nil
+}
+
+//FindUser finds user with particular email, and returns it
+func FindUser(db *sql.DB, uname string) (Member, error) {
+	var User Member
+
+	query := `Select * from users where username=?`
+	res, e := db.Query(query, uname)
+
+	if e != nil {
+		return User, e
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password); err != nil {
+			return User, err
+		}
+	}
+
+	return User, nil
+}
+
+//AddMember to add member to database
+func AddMember(db *sql.DB, mem Member) error {
+	q := `
+	INSERT INTO users
+	(username, fname, lname, email, college, password)
+	Values (?,?,?,?,?,?)
+	`
+
+	if _, e := db.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password); e != nil {
+		return e
+	}
+
+	return nil
 }
