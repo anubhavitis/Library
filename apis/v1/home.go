@@ -22,23 +22,24 @@ func Homepage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, html)
 }
 
-var users = map[string]string{
-	"user1": "password1",
-	"user2": "password2",
-}
-
 //SignIn handler
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	var cred auth.UserCred
+	Mydb, err := DB.InitDb()
+	if err != nil {
+		fmt.Fprintf(w, "Error at connecting with Database")
+		w.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
 
 	if e := json.NewDecoder(r.Body).Decode(&cred); e != nil {
 		fmt.Println("Error at decoding request", e)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	expectedPassword, ok := users[cred.Username]
+	user, ok := DB.FindUser(Mydb, cred.Username)
 
-	if !ok || expectedPassword != cred.Password {
+	if (ok != nil || user == DB.Member{} || user.Password != cred.Password) {
 		fmt.Println("Error at matching password", ok)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -76,7 +77,9 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	var NewUser DB.Member
 	Mydb, err := DB.InitDb()
 	if err != nil {
-		fmt.Println("DB: ", Mydb)
+		fmt.Fprintf(w, "Error at connecting with Database")
+		w.WriteHeader(http.StatusExpectationFailed)
+		return
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
