@@ -21,7 +21,7 @@ var config = oauth1.Config{
 	Endpoint:       twauth.AuthorizeEndpoint,
 }
 
-func TwitterLoginHandler(w http.ResponseWriter, r *http.Request) {
+func TwitterSignupHandler(w http.ResponseWriter, r *http.Request) {
 	requestToken, requestSecret, err = config.RequestToken()
 	if err != nil {
 		fmt.Println("error while generating request token", err)

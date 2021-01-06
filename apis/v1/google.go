@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,11 +10,28 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
+type Credential struct {
+	Cid     string `json:"cid,omitempty"`
+	Csecret string `json:"csecret,omitempty"`
+}
+
+var cred Credential
+
+func init() {
+
+	f, err := ioutil.ReadFile("./config.json")
+	if err != nil {
+		fmt.Println("could not read the file:",err)
+	}
+	err=json.Unmarshal(f, &cred)
+	fmt.Println(err, cred)
+}
+
 var (
 	googleOauthConfig = &oauth2.Config{
-		RedirectURL:  "http://localhost:8080/callback",
-		ClientID:     "68309862236-0tpmf7scq3plc9ijbbfubrdh7kng9qdd.apps.googleusercontent.com",
-		ClientSecret: "dLOrJJIy-xI_lczuJgAjP97G",
+		RedirectURL:  "http://localhost:8000/google/callback",
+		ClientID:     cred.Cid,
+		ClientSecret: cred.Csecret,
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.profile",
 			"https://www.googleapis.com/auth/userinfo.email",
@@ -28,12 +46,12 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, html)
 }
 
-func handleLogin(w http.ResponseWriter, r *http.Request) {
+func GoogleSignupHandler(w http.ResponseWriter, r *http.Request) {
 	url := googleOauthConfig.AuthCodeURL(randomState)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
-func handleCallback(w http.ResponseWriter, r *http.Request) {
+func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if r.FormValue("state") != randomState {
 		fmt.Println("State is not valid")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)

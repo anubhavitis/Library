@@ -1,4 +1,4 @@
-package auth
+package middleware
 
 import (
 	jwt "github.com/dgrijalva/jwt-go"

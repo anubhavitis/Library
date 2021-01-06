@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/anubhavitis/Library/auth"
+	auth "github.com/anubhavitis/Library/apis/middleware"
 	DB "github.com/anubhavitis/Library/databases"
 	"github.com/dgrijalva/jwt-go"
 )
