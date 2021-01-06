@@ -7,7 +7,7 @@ import (
 
 	// DB "Library/APIs/databases/database"
 
-	"github.com/anubhavitis/Library/apis"
+	"github.com/anubhavitis/Library/apis/v1"
 	DB "github.com/anubhavitis/Library/databases"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -15,9 +15,9 @@ import (
 
 //Mydb pointer to database
 var Mydb *sql.DB
+var port = "8000"
 
-func main() {
-
+func init() {
 	Mydb, err := DB.InitDb()
 	if err != nil {
 		fmt.Println("DB: ", Mydb)
@@ -28,13 +28,22 @@ func main() {
 	if e := DB.CreateMemberTable(Mydb); e != nil {
 		fmt.Println("Error at creating users:", e)
 	}
+}
 
+func main() {
 	r := mux.NewRouter().StrictSlash(true)
-	r.HandleFunc("/", apis.Homepage)
-	r.HandleFunc("/signin", apis.SignIn)
-	r.HandleFunc("/signup", apis.SignUp)
-	r.HandleFunc("/welcome", apis.Welcome)
-	r.HandleFunc("/refresh", apis.Refresh)
-
-	http.ListenAndServe(":8080", r)
+	r.HandleFunc("/", v1.Homepage)
+	
+	//Signup routes
+	r.HandleFunc("/signup", v1.SignUp)
+	r.HandleFunc("/google/signup",v1.GoogleSignupHandler)
+	r.HandleFunc("/google/callback",v1.GoogleCallbackHandler)
+	r.HandleFunc("/twitter/signup",v1.TwitterSignupHAndler)
+	r.HandleFunc("/twitter/callback",v1.TwitterCallbackHandler)
+	
+	r.HandleFunc("/signin", v1.SignIn)
+	r.HandleFunc("/welcome", v1.Welcome)
+	r.HandleFunc("/refresh", v1.Refresh)
+	http.Handle("/", r)
+	http.ListenAndServe(":"+port, nil)
 }

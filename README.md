@@ -36,7 +36,124 @@ A web application, that lets you to share your regular reads and your books with
 - <strong> Server hosting: </strong> GO Web Framework
 - <strong> Web hosting: </strong> Heroku
 
+#### Version of API :  V1.0
+    
+# API Documentation
+ All responses come in standard JSON. All requests must include a `content-type` of `application/json` and the body must be valid JSON.
 
+
+### Response Codes
+```
+200: Success
+201: Created
+400: Bad request
+401: Unauthorized
+404: Cannot be found
+405: Method not allowed
+50x: Server Error
+```
+### Error and Success Message Example
+
+```json
+  {
+    "error":"" 
+  }
+  
+  {
+      "success":"",
+      "data": ""  
+  }
+```
+
+## Custom SignUp
+
+**You send:**  You send the details required to signup.
+
+**You get:** An `Error-Message` or a `Success-Message` depending on the status of the account created
+
+**Endpoint:** 
+     /signup
+
+**Authorization Token:** Not required
+
+**Request:**
+`POST HTTP/1.1`
+
+```json
+Accept: application/json
+Content-Type: application/json
+Content-Length: xy
+
+{   
+    "name": "abc",
+    "username": "user",
+    "email": "foo",
+    "password": "1234567",
+    "cpassword": "1234567"
+}
+```
+
+**Successful Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: xy
+
+{
+   "success": true,
+   "Token" : "hgsvcdvbhjcu76tdghev3bneidf87ydtegwvb3e"
+}
+```
+
+## Google signup
+
+**You send:**  Your credentials and authorization to the app.
+
+**You get:** An `API-Token` and a `Success-Message` with which you can make further actions.
+
+**Endpoint:** 
+     /google/signup
+
+**Authorization Token:** Not required
+
+**Request:**  sent to google oauth.
+
+**Successful Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: xy
+
+{
+   "success":true,
+   "token": "e3b0iuytfgvbjkio876yghhjio9098765rtfgvb",
+}
+```
+
+## Twitter signup
+
+**You send:**  Your credentials and authorization to the app.
+
+**You get:** An `API-Token` and a `Success-Message` with which you can make further actions.
+
+**Endpoint:** 
+     /twitter/signup
+
+**Authorization Token:** Not required
+
+**Request:**  sent to twitter oauth.
+
+**Successful Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: xy
+
+{
+   "success":true,
+   "token": "e3b0iuytfgvbjkio876yghhjio9098765rtfgvb",
+}
+```
 <!-- ## Project Setup
 - Fork and clone the Repo by typing the following commands in the terminal 
 ```

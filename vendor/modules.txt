@@ -1,5 +1,9 @@
 # cloud.google.com/go v0.65.0
 cloud.google.com/go/compute/metadata
+# github.com/dghubble/oauth1 v0.6.0
+## explicit
+github.com/dghubble/oauth1
+github.com/dghubble/oauth1/twitter
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 ## explicit
 github.com/dgrijalva/jwt-go
