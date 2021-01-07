@@ -6,38 +6,22 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/anubhavitis/Library/apis/middleware"
 	auth "github.com/anubhavitis/Library/apis/middleware"
 	DB "github.com/anubhavitis/Library/databases"
 	"github.com/dgrijalva/jwt-go"
 )
 
-//Homepage handler
-func Homepage(w http.ResponseWriter, r *http.Request) {
-	html := `
-	<html> <body> 
-		<h1> Welcome to TestAPIs </h1>
-		<a href="\signup"> SignUp</a>
-	</body> </html>`
-
-	fmt.Fprintln(w, html)
-}
-
 //SignIn handler
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	var cred auth.UserCred
-	Mydb, err := DB.InitDb()
-	if err != nil {
-		fmt.Fprintf(w, "Error at connecting with Database")
-		w.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
 
 	if e := json.NewDecoder(r.Body).Decode(&cred); e != nil {
 		fmt.Println("Error at decoding request", e)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	user, ok := DB.FindUser(Mydb, cred.Username)
+	user, ok := DB.FindUser(cred.Username)
 
 	if (ok != nil || user == DB.Member{} || user.Password != cred.Password) {
 		fmt.Println("Error at matching password", ok)
@@ -75,12 +59,6 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 //SignUp handler
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var NewUser DB.Member
-	Mydb, err := DB.InitDb()
-	if err != nil {
-		fmt.Fprintf(w, "Error at connecting with Database")
-		w.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
 
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
 		fmt.Println("Error at parsing signin request: ", err)
@@ -88,7 +66,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if EmailCheck, e := DB.FindEmail(Mydb, NewUser.Email); (e != nil || EmailCheck != DB.Member{}) {
+	if EmailCheck, e := DB.FindEmail(NewUser.Email); (e != nil || EmailCheck != DB.Member{}) {
 		if e != nil {
 			fmt.Println("Error at finding user with email at signup", e)
 			w.WriteHeader(http.StatusConflict)
@@ -99,7 +77,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if UserCheck, e := DB.FindUser(Mydb, NewUser.UserName); (e != nil || UserCheck != DB.Member{}) {
+	if UserCheck, e := DB.FindUser(NewUser.UserName); (e != nil || UserCheck != DB.Member{}) {
 		if e != nil {
 			fmt.Println("Error at finding user with username at signup", e)
 			w.WriteHeader(http.StatusConflict)
@@ -110,7 +88,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if e := DB.AddMember(Mydb, NewUser); e != nil {
+	if e := DB.AddMember(NewUser); e != nil {
 		fmt.Fprintf(w, e.Error())
 		w.WriteHeader(http.StatusExpectationFailed)
 		return
@@ -152,7 +130,7 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Homepage(w, r)
+	middleware.Homepage(w, r)
 }
 
 //Refresh handler
