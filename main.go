@@ -33,7 +33,7 @@ func main() {
 
 	r.HandleFunc("/signin", v1.SignIn)
 	r.HandleFunc("/welcome", middleware.Auth(middleware.Homepage))
-	r.HandleFunc("/test", v1.Welcome)
+	// r.HandleFunc("/test", v1.Welcome)
 	r.HandleFunc("/refresh", v1.Refresh)
 	http.Handle("/", r)
 	http.ListenAndServe(":"+port, nil)
