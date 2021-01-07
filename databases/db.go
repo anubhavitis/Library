@@ -19,15 +19,6 @@ type Member struct {
 	Password string `json:"password"`
 }
 
-//Book strucuture
-type Book struct {
-	UID         string `json:"uid"`
-	Name        string `json:"name"`
-	Author      string `json:"author"`
-	Genre       string `json:"genre"`
-	Description string `json:"description"`
-}
-
 //GenerateUUID ..
 func GenerateUUID() string {
 	v, _ := uuid.NewUUID()
@@ -79,27 +70,6 @@ func CreateMemberTable(db *sql.DB) error {
 		return err
 	}
 	fmt.Println("Users Created!")
-	return nil
-}
-
-//CreateBooksTable function
-func CreateBooksTable(db *sql.DB) error {
-	queryBooks := `
-	CREATE TABLE IF NOT EXISTS
-	books (
-		id INT PRIMARY KEY AUTO_INCREMENT,
-		name varchar(255),
-		author varchar(255),
-		genre varchar(255),
-		description varchar(500)
-	);
-	`
-
-	if _, err := db.Exec(queryBooks); err != nil {
-		fmt.Println("Books can not be created!")
-		return err
-	}
-	fmt.Println("Books Created!")
 	return nil
 }
 
