@@ -22,7 +22,7 @@ func main() {
 	database.Mydb = Mydb
 
 	r := mux.NewRouter().StrictSlash(true)
-	r.HandleFunc("/", middleware.Homepage)
+	r.HandleFunc("/", v1.Homepage)
 
 	//Signup routes
 	r.HandleFunc("/signup", v1.SignUp)
@@ -32,7 +32,7 @@ func main() {
 	r.HandleFunc("/twitter/callback", v1.TwitterCallbackHandler)
 
 	r.HandleFunc("/signin", v1.SignIn)
-	r.HandleFunc("/welcome", middleware.Auth(middleware.Homepage))
+	r.HandleFunc("/welcome", middleware.Auth(v1.Homepage))
 	// r.HandleFunc("/test", v1.Welcome)
 	r.HandleFunc("/refresh", v1.Refresh)
 	http.Handle("/", r)

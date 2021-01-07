@@ -3,12 +3,11 @@ package middleware
 import (
 	"fmt"
 	"net/http"
-
+	jwtauth "github.com/anubhavitis/Library/pkg/auth"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-//JwtKey as a secret Key
-var JwtKey = []byte("my_secret_key")
+
 
 //UserCred as expected User Credential while login
 type UserCred struct {
@@ -16,11 +15,7 @@ type UserCred struct {
 	Username string `json:"username"`
 }
 
-//Claims struct for jwt
-type Claims struct {
-	Username string `json:"username"`
-	jwt.StandardClaims
-}
+
 
 //Auth function
 func Auth(f http.HandlerFunc) http.HandlerFunc {
@@ -41,10 +36,10 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 		}
 
 		tokenStr := c.Value
-		claims := &Claims{}
+		claims := &jwtauth.Claims{}
 
 		tkn, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return JwtKey, nil
+			return jwtauth.JwtKey, nil
 		})
 
 		if err != nil {
@@ -66,13 +61,4 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-//Homepage handler
-func Homepage(w http.ResponseWriter, r *http.Request) {
-	html := `
-	<html> <body> 
-		<h1> Welcome to TestAPIs </h1>
-		<a href="\signup"> SignUp</a>
-	</body> </html>`
 
-	fmt.Fprintln(w, html)
-}

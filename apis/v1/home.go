@@ -9,6 +9,7 @@ import (
 
 	auth "github.com/anubhavitis/Library/apis/middleware"
 	DB "github.com/anubhavitis/Library/databases"
+	jwtauth "github.com/anubhavitis/Library/pkg/auth"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -30,16 +31,12 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	expTime := time.Now().Add(30 * time.Minute)
-
-	claims := &auth.Claims{
-		Username: cred.Username,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expTime.Unix(),
-		},
-	}
+	var claims jwtauth.Claims
+	claims.Username = cred.Username
+	claims.ExpiresAt = expTime.Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenstr, err := token.SignedString(auth.JwtKey)
+	tokenstr, err := token.SignedString(jwtauth.JwtKey)
 
 	if err != nil {
 		fmt.Println("Error at making token string", err)
@@ -57,9 +54,9 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 }
 
 type result struct {
-	Done  bool   `json:"done"`
-	Token string `json:"token"`
-	Error error  `json:"error"`
+	Success bool   `json:"done"`
+	Token   string `json:"token"`
+	Error   error  `json:"error"`
 }
 
 //SignUp handler
@@ -67,117 +64,55 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "applicaton/json")
 	var NewUser DB.Member
 	res := &result{
-		Done:  false,
-		Token: "",
-		Error: nil,
+		Success: false,
+		Token:   "",
+		Error:   nil,
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
 		res.Error = err
-		resJ, e := json.Marshal(res)
-		if e != nil {
-			fmt.Println(e)
-			return
-		}
-
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(resJ)
+		sendResponse(w, 400, res)
 		return
 	}
 
 	if EmailCheck, e := DB.FindEmail(NewUser.Email); (e != nil || EmailCheck != DB.Member{}) {
 		if e != nil {
 			fmt.Println("Error at finding user with email at signup", e)
-			w.WriteHeader(http.StatusConflict)
 			res.Error = e
-			resJ, err := json.Marshal(res)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(resJ)
+			sendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
 		res.Error = errors.New("email unavailable")
-		resJ, e := json.Marshal(res)
-		if e != nil {
-			fmt.Println(e)
-			return
-		}
-
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(resJ)
+		sendResponse(w, 307, res)
 		return
 	}
 
 	if UserCheck, e := DB.FindUser(NewUser.UserName); (e != nil || UserCheck != DB.Member{}) {
 		if e != nil {
-			w.WriteHeader(http.StatusConflict)
 			res.Error = e
-			resJ, e := json.Marshal(res)
-			if e != nil {
-				fmt.Println(e)
-			}
-			w.Write(resJ)
+			sendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
 		res.Error = errors.New("username unavailable")
-		resJ, e := json.Marshal(res)
-		if e != nil {
-			fmt.Println(e)
-		}
-
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(resJ)
+		sendResponse(w, 307, res)
 		return
 	}
 
 	if e := DB.AddMember(NewUser); e != nil {
-		w.WriteHeader(http.StatusExpectationFailed)
 		res.Error = e
-		resJ, e := json.Marshal(res)
-		if e != nil {
-			fmt.Println(e)
-		}
-		w.Write(resJ)
+		sendResponse(w, http.StatusExpectationFailed, res)
 		return
 	}
 
-	expTime := time.Now().Add(30 * time.Minute)
-
-	claims := &auth.Claims{
-		Username: NewUser.UserName,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expTime.Unix(),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenstr, err := token.SignedString(auth.JwtKey)
-
+	token, err := jwtauth.GenerateToken(NewUser)
 	if err != nil {
 		res.Error = err
-		resJ, e := json.Marshal(res)
-		if e != nil {
-			fmt.Println(e)
-		}
-
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(resJ)
+		sendResponse(w, 400, res)
 		return
 	}
-
-	res.Done = true
-	res.Token = tokenstr
-	resJ, e := json.Marshal(res)
-	if e != nil {
-		fmt.Println(e)
-	}
-
-	w.WriteHeader(http.StatusUnauthorized)
-	w.Write(resJ)
+	res.Success = true
+	res.Token = token
+	sendResponse(w, 200, res)
 	return
 }
 
@@ -194,10 +129,10 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tokenStr := c.Value
-	claims := &auth.Claims{}
+	claims := &jwtauth.Claims{}
 
 	tkn, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return auth.JwtKey, nil
+		return jwtauth.JwtKey, nil
 	})
 
 	if err != nil {
@@ -222,7 +157,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	expTime := time.Now().Add(30 * time.Minute)
 	claims.ExpiresAt = expTime.Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(auth.JwtKey)
+	tokenString, err := token.SignedString(jwtauth.JwtKey)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -233,4 +168,16 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		Value:   tokenString,
 		Expires: expTime,
 	})
+}
+
+//Homepage handler
+func Homepage(w http.ResponseWriter, r *http.Request) {
+	html := `
+	<html> <body> 
+		<h1> Welcome to TestAPIs </h1>
+		<a href="\signup"> SignUp</a>
+	</body> </html>`
+
+	fmt.Fprintln(w, html)
+	
 }
