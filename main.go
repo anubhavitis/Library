@@ -1,36 +1,28 @@
 package main
 
 import (
-	"database/sql"
+	"fmt"
 	"net/http"
 
-	// DB "Library/APIs/databases/database"
-
+	"github.com/anubhavitis/Library/apis/middleware"
 	v1 "github.com/anubhavitis/Library/apis/v1"
+	database "github.com/anubhavitis/Library/databases"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
-//Mydb pointer to database
-var Mydb *sql.DB
-var port = "8000"
-
-func init() {
-	// Mydb, err := DB.InitDb()
-	// if err != nil {
-	// 	fmt.Println("DB: ", Mydb)
-	// }
-	// if e := DB.CreateBooksTable(Mydb); e != nil {
-	// 	fmt.Println("Error at creating books:", e)
-	// }
-	// if e := DB.CreateMemberTable(Mydb); e != nil {
-	// 	fmt.Println("Error at creating users:", e)
-	// }
-}
+var port = "8080"
 
 func main() {
+
+	Mydb, err := database.InitDb()
+	if err != nil {
+		fmt.Println("DB: ", Mydb)
+	}
+	database.Mydb = Mydb
+
 	r := mux.NewRouter().StrictSlash(true)
-	r.HandleFunc("/", v1.Homepage)
+	r.HandleFunc("/", middleware.Homepage)
 
 	//Signup routes
 	r.HandleFunc("/signup", v1.SignUp)
@@ -40,7 +32,8 @@ func main() {
 	r.HandleFunc("/twitter/callback", v1.TwitterCallbackHandler)
 
 	r.HandleFunc("/signin", v1.SignIn)
-	r.HandleFunc("/welcome", v1.Welcome)
+	r.HandleFunc("/welcome", middleware.Auth(middleware.Homepage))
+	// r.HandleFunc("/test", v1.Welcome)
 	r.HandleFunc("/refresh", v1.Refresh)
 	http.Handle("/", r)
 	http.ListenAndServe(":"+port, nil)

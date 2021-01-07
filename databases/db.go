@@ -34,6 +34,9 @@ func GenerateUUID() string {
 	return v.String()
 }
 
+//Mydb function
+var Mydb *sql.DB
+
 //InitDb funtion
 func InitDb() (*sql.DB, error) {
 
@@ -46,6 +49,13 @@ func InitDb() (*sql.DB, error) {
 		fmt.Println("Error at ping.")
 		return nil, err
 	}
+	if e := CreateBooksTable(dab); e != nil {
+		fmt.Println("Error at creating books:", e)
+	}
+	if e := CreateMemberTable(dab); e != nil {
+		fmt.Println("Error at creating users:", e)
+	}
+
 	return dab, nil
 }
 
@@ -94,11 +104,11 @@ func CreateBooksTable(db *sql.DB) error {
 }
 
 //FindEmail finds user with particular email, and returns it
-func FindEmail(db *sql.DB, email string) (Member, error) {
+func FindEmail(email string) (Member, error) {
 	var User Member
 
 	query := `Select * from users where email=?`
-	res, e := db.Query(query, email)
+	res, e := Mydb.Query(query, email)
 
 	if e != nil {
 		return User, e
@@ -116,11 +126,11 @@ func FindEmail(db *sql.DB, email string) (Member, error) {
 }
 
 //FindUser finds user with particular email, and returns it
-func FindUser(db *sql.DB, uname string) (Member, error) {
+func FindUser(uname string) (Member, error) {
 	var User Member
 
 	query := `Select * from users where username=?`
-	res, e := db.Query(query, uname)
+	res, e := Mydb.Query(query, uname)
 
 	if e != nil {
 		return User, e
@@ -138,14 +148,14 @@ func FindUser(db *sql.DB, uname string) (Member, error) {
 }
 
 //AddMember to add member to database
-func AddMember(db *sql.DB, mem Member) error {
+func AddMember(mem Member) error {
 	q := `
 	INSERT INTO users
 	(username, fname, lname, email, college, password)
 	Values (?,?,?,?,?,?)
 	`
 
-	if _, e := db.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password); e != nil {
+	if _, e := Mydb.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password); e != nil {
 		return e
 	}
 
