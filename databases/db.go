@@ -19,15 +19,6 @@ type Member struct {
 	Password string `json:"password"`
 }
 
-//Book strucuture
-type Book struct {
-	UID         string `json:"uid"`
-	Name        string `json:"name"`
-	Author      string `json:"author"`
-	Genre       string `json:"genre"`
-	Description string `json:"description"`
-}
-
 //GenerateUUID ..
 func GenerateUUID() string {
 	v, _ := uuid.NewUUID()
@@ -40,7 +31,7 @@ var Mydb *sql.DB
 //InitDb funtion
 func InitDb() (*sql.DB, error) {
 
-	dab, err := sql.Open("mysql", "anubhavitis:anubhh@v123@tcp(127.0.0.1:3306)/library")
+	dab, err := sql.Open("mysql", "anubhavitis:anubhav@db@(db4free.net:3306)/library07")
 	if err != nil {
 		fmt.Println("Error at opening database")
 		return nil, err
@@ -49,6 +40,7 @@ func InitDb() (*sql.DB, error) {
 		fmt.Println("Error at ping.")
 		return nil, err
 	}
+
 	if e := CreateBooksTable(dab); e != nil {
 		fmt.Println("Error at creating books:", e)
 	}
@@ -79,27 +71,6 @@ func CreateMemberTable(db *sql.DB) error {
 		return err
 	}
 	fmt.Println("Users Created!")
-	return nil
-}
-
-//CreateBooksTable function
-func CreateBooksTable(db *sql.DB) error {
-	queryBooks := `
-	CREATE TABLE IF NOT EXISTS
-	books (
-		id INT PRIMARY KEY AUTO_INCREMENT,
-		name varchar(255),
-		author varchar(255),
-		genre varchar(255),
-		description varchar(500)
-	);
-	`
-
-	if _, err := db.Exec(queryBooks); err != nil {
-		fmt.Println("Books can not be created!")
-		return err
-	}
-	fmt.Println("Books Created!")
 	return nil
 }
 
