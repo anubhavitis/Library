@@ -31,7 +31,7 @@ var Mydb *sql.DB
 //InitDb funtion
 func InitDb() (*sql.DB, error) {
 
-	dab, err := sql.Open("mysql", "anubhavitis:anubhh@v123@tcp(127.0.0.1:3306)/library")
+	dab, err := sql.Open("mysql", "anubhavitis:anubhav@db@(db4free.net:3306)/library07")
 	if err != nil {
 		fmt.Println("Error at opening database")
 		return nil, err
@@ -40,6 +40,7 @@ func InitDb() (*sql.DB, error) {
 		fmt.Println("Error at ping.")
 		return nil, err
 	}
+
 	if e := CreateBooksTable(dab); e != nil {
 		fmt.Println("Error at creating books:", e)
 	}
