@@ -3,11 +3,10 @@ package middleware
 import (
 	"fmt"
 	"net/http"
+
 	jwtauth "github.com/anubhavitis/Library/pkg/auth"
 	jwt "github.com/dgrijalva/jwt-go"
 )
-
-
 
 //UserCred as expected User Credential while login
 type UserCred struct {
@@ -15,13 +14,9 @@ type UserCred struct {
 	Username string `json:"username"`
 }
 
-
-
 //Auth function
 func Auth(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("MiddleWare Initiated")
-		defer fmt.Println("MiddleWare ended")
 
 		c, err := r.Cookie("Token")
 		if err != nil {
@@ -60,5 +55,3 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 		f.ServeHTTP(w, r)
 	}
 }
-
-

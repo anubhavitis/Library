@@ -32,9 +32,12 @@ func main() {
 	r.HandleFunc("/twitter/callback", v1.TwitterCallbackHandler)
 
 	r.HandleFunc("/signin", v1.SignIn)
-	r.HandleFunc("/welcome", middleware.Auth(v1.Homepage))
-	// r.HandleFunc("/test", v1.Welcome)
 	r.HandleFunc("/refresh", v1.Refresh)
+	r.HandleFunc("/welcome", middleware.Auth(v1.Homepage))
+	r.HandleFunc("/addbook", middleware.Auth(v1.AddBook))
+	r.HandleFunc("/deletebook", middleware.Auth(v1.DeleteBook))
+	r.HandleFunc("/updatebook", middleware.Auth(v1.UpdateBookInfo))
+	r.HandleFunc("/getallbook", middleware.Auth(v1.GetBook))
 	http.Handle("/", r)
 	http.ListenAndServe(":"+port, nil)
 }

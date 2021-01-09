@@ -2,48 +2,95 @@ package v1
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"errors"
 	"net/http"
 
+	auth "github.com/anubhavitis/Library/apis/middleware"
 	Db "github.com/anubhavitis/Library/databases"
-	"github.com/anubhavitis/Library/pkg/models"
 )
 
+//AddBook func
 func AddBook(w http.ResponseWriter, r *http.Request) {
-	var resp models.Response
+	var resp Result
 	var book Db.Book
-	data, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		resp.Error = "error while marshalling body"
-		sendResponse(w, 400, resp)
-		return
+
+	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
+		resp.Error = err
+		sendResponse(w, http.StatusBadRequest, resp)
 	}
-	err = json.Unmarshal(data, &book)
-	if err != nil {
-		resp.Error = "error while marshalling book"
-		sendResponse(w, 400, resp)
-		return
-	}
-	book.UID = GenerateUUID()
+
+	// book.UID = GenerateUUID()
 	book.Likes = 0
-	err = Db.AddBook(book)
-	if err != nil {
-		resp.Error = "error while adding book to database"
+
+	if err = Db.AddBook(book); err != nil {
+		resp.Error = errors.New("error while adding book to database")
 		sendResponse(w, 400, resp)
 		return
 	}
-	resp.Success = "Book successfully added"
+	resp.Success = true
 	sendResponse(w, 200, resp)
 }
 
+//DeleteBook func
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
-	return
+	var book Db.Book
+	var res Result
+	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
+		res.Error = err
+		sendResponse(w, http.StatusBadRequest, res)
+		return
+	}
+
+	if _, e := Db.DeleteBook(book.UID); e != nil {
+		res.Error = e
+		sendResponse(w, http.StatusConflict, res)
+		return
+	}
+
+	res.Success = true
+	sendResponse(w, http.StatusAccepted, res)
 }
 
+//UpdateBookInfo func
 func UpdateBookInfo(w http.ResponseWriter, r *http.Request) {
-	return
+	var book Db.Book
+	var res Result
+	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
+		res.Error = err
+		sendResponse(w, http.StatusBadRequest, res)
+		return
+	}
+
+	if _, e := Db.UpdateBook(book); e != nil {
+		res.Error = e
+		sendResponse(w, http.StatusConflict, res)
+		return
+	}
+
+	res.Success = true
+	sendResponse(w, http.StatusAccepted, res)
 }
 
+//GetBook func
 func GetBook(w http.ResponseWriter, r *http.Request) {
-	return
+	var res Result
+	var user auth.UserCred
+
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		res.Error = err
+		sendResponse(w, http.StatusBadRequest, res)
+		return
+	}
+
+	books, err := Db.ListUserBooks(user.Username)
+	if err != nil {
+		res.Error = err
+		sendResponse(w, http.StatusConflict, res)
+		return
+	}
+	res.Body = map[string]interface{}{
+		"books": books,
+	}
+	res.Success = true
+	sendResponse(w, http.StatusAccepted, res)
 }

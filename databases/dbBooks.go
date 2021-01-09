@@ -80,3 +80,25 @@ func ListUserBooks(uname string) ([]Book, error) {
 
 	return books, nil
 }
+
+//DeleteBook func
+func DeleteBook(id string) (bool, error) {
+	q := `DELETE from books WHERE id=?`
+
+	if _, e := Mydb.Exec(q, id); e != nil {
+		return false, e
+	}
+	return true, nil
+}
+
+//UpdateBook func
+func UpdateBook(book Book) (bool, error) {
+	q := ` UPDATE books
+		SET name=?, owner=?, genre=?, about=?, likes=?, image=?
+		where uid=?`
+
+	if _, e := Mydb.Exec(q, book.Name, book.Owner, book.Genre, book.About, book.Likes, book.Image, book.UID); e != nil {
+		return false, e
+	}
+	return true, nil
+}
