@@ -10,20 +10,20 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-type Credential struct {
+type credential struct {
 	Cid     string `json:"cid,omitempty"`
 	Csecret string `json:"csecret,omitempty"`
 }
 
-var cred Credential
+var cred credential
 
 func init() {
 
 	f, err := ioutil.ReadFile("./config.json")
 	if err != nil {
-		fmt.Println("could not read the file:",err)
+		fmt.Println("could not read the file:", err)
 	}
-	err=json.Unmarshal(f, &cred)
+	err = json.Unmarshal(f, &cred)
 	fmt.Println(err, cred)
 }
 
@@ -46,11 +46,13 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, html)
 }
 
+//GoogleSignupHandler func
 func GoogleSignupHandler(w http.ResponseWriter, r *http.Request) {
 	url := googleOauthConfig.AuthCodeURL(randomState)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
+//GoogleCallbackHandler func
 func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if r.FormValue("state") != randomState {
 		fmt.Println("State is not valid")

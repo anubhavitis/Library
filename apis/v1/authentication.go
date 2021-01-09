@@ -16,17 +16,16 @@ import (
 //SignIn handler
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	var cred auth.UserCred
-
+	var res Result
 	if e := json.NewDecoder(r.Body).Decode(&cred); e != nil {
-		fmt.Println("Error at decoding request", e)
-		w.WriteHeader(http.StatusBadRequest)
+		res.Error = e
+		sendResponse(w, http.StatusBadRequest, res)
 		return
 	}
 	user, ok := DB.FindUser(cred.Username)
 
 	if (ok != nil || user == DB.Member{} || user.Password != cred.Password) {
-		fmt.Println("Error at matching password", ok)
-		w.WriteHeader(http.StatusUnauthorized)
+		sendResponse(w, http.StatusUnauthorized, res)
 		return
 	}
 
@@ -39,8 +38,8 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	tokenstr, err := token.SignedString(jwtauth.JwtKey)
 
 	if err != nil {
-		fmt.Println("Error at making token string", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		res.Error = err
+		sendResponse(w, http.StatusInternalServerError, res)
 		return
 	}
 
@@ -50,24 +49,15 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		Expires: expTime,
 	})
 
-	fmt.Fprintf(w, " Cookie thing worked")
-}
-
-type result struct {
-	Success bool   `json:"done"`
-	Token   string `json:"token"`
-	Error   error  `json:"error"`
+	res.Success = true
+	sendResponse(w, http.StatusAccepted, res)
 }
 
 //SignUp handler
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "applicaton/json")
 	var NewUser DB.Member
-	res := &result{
-		Success: false,
-		Token:   "",
-		Error:   nil,
-	}
+	var res Result
 
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
 		res.Error = err
@@ -77,7 +67,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	if EmailCheck, e := DB.FindEmail(NewUser.Email); (e != nil || EmailCheck != DB.Member{}) {
 		if e != nil {
-			fmt.Println("Error at finding user with email at signup", e)
 			res.Error = e
 			sendResponse(w, http.StatusInternalServerError, res)
 			return
@@ -111,9 +100,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res.Success = true
-	res.Token = token
+	res.Body["Token"] = token
 	sendResponse(w, 200, res)
-	return
 }
 
 //Refresh handler
@@ -179,5 +167,5 @@ func Homepage(w http.ResponseWriter, r *http.Request) {
 	</body> </html>`
 
 	fmt.Fprintln(w, html)
-	
+
 }

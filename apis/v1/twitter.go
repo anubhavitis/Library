@@ -21,6 +21,7 @@ var config = oauth1.Config{
 	Endpoint:       twauth.AuthorizeEndpoint,
 }
 
+//TwitterSignupHandler func
 func TwitterSignupHandler(w http.ResponseWriter, r *http.Request) {
 	requestToken, requestSecret, err = config.RequestToken()
 	if err != nil {
@@ -34,6 +35,7 @@ func TwitterSignupHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, authorizationURL.String(), 302)
 }
 
+//TwitterCallbackHandler func
 func TwitterCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	checkToken, verifier, err := oauth1.ParseAuthorizationCallback(r)
 	if err != nil {
