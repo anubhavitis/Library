@@ -100,7 +100,9 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res.Success = true
-	res.Body["Token"] = token
+	res.Body = map[string]interface{}{
+		"Token": token,
+	}
 	sendResponse(w, 200, res)
 }
 
