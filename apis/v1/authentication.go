@@ -10,6 +10,7 @@ import (
 	auth "github.com/anubhavitis/Library/apis/middleware"
 	DB "github.com/anubhavitis/Library/databases"
 	jwtauth "github.com/anubhavitis/Library/pkg/auth"
+	"github.com/anubhavitis/Library/pkg/email"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -98,6 +99,10 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		res.Error = err
 		sendResponse(w, 400, res)
 		return
+	}
+	ok :=email.SendWelcomeEmail(NewUser.Email,NewUser.Fname+NewUser.Lname)
+	if !ok{
+		fmt.Println("SMTP Not working.")
 	}
 	res.Success = true
 	res.Body["Token"] = token

@@ -18,6 +18,13 @@ github.com/google/uuid
 # github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
+# github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394
+## explicit
+github.com/mailjet/mailjet-apiv3-go
+github.com/mailjet/mailjet-apiv3-go/fixtures
+github.com/mailjet/mailjet-apiv3-go/resources
+# github.com/mailjet/mailjet-apiv3-go/v3 v3.0.0
+## explicit
 # golang.org/x/net v0.0.0-20200822124328-c89045814202
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
