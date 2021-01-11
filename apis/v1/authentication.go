@@ -105,7 +105,9 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("SMTP Not working.")
 	}
 	res.Success = true
-	res.Body["Token"] = token
+	res.Body = map[string]interface{}{
+		"Token": token,
+	}
 	sendResponse(w, 200, res)
 }
 
