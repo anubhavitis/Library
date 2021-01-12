@@ -9,6 +9,7 @@ import (
 
 	auth "github.com/anubhavitis/Library/apis/middleware"
 	DB "github.com/anubhavitis/Library/databases"
+	database "github.com/anubhavitis/Library/databases"
 	jwtauth "github.com/anubhavitis/Library/pkg/auth"
 	"github.com/anubhavitis/Library/pkg/email"
 	"github.com/dgrijalva/jwt-go"
@@ -20,7 +21,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	var res Result
 	if e := json.NewDecoder(r.Body).Decode(&cred); e != nil {
 		res.Error = e
-		sendResponse(w, http.StatusBadRequest, res)
+		SendResponse(w, http.StatusBadRequest, res)
 		return
 	}
 
@@ -31,11 +32,11 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		if ok != nil {
 			fmt.Println(ok)
 			res.Error = ok
-			sendResponse(w, http.StatusUnauthorized, res)
+			SendResponse(w, http.StatusUnauthorized, res)
 			return
 		}
 		res.Error = errors.New("username/password combination not found")
-		sendResponse(w, http.StatusUnauthorized, res)
+		SendResponse(w, http.StatusUnauthorized, res)
 		return
 	}
 	fmt.Println("Checked Password")
@@ -43,7 +44,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	tokenstr, err := jwtauth.GenerateToken(user)
 	if err != nil {
 		res.Error = err
-		sendResponse(w, http.StatusInternalServerError, res)
+		SendResponse(w, http.StatusInternalServerError, res)
 		return
 	}
 
@@ -54,7 +55,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	})
 
 	res.Success = true
-	sendResponse(w, http.StatusAccepted, res)
+	SendResponse(w, http.StatusAccepted, res)
 }
 
 //SignUp handler
@@ -64,33 +65,33 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
 		res.Error = err
-		sendResponse(w, 400, res)
+		SendResponse(w, 400, res)
 		return
 	}
 	if EmailCheck, e := DB.FindEmail(NewUser.Email); (e != nil || EmailCheck != DB.Member{}) {
 		if e != nil {
 			res.Error = e
-			sendResponse(w, http.StatusInternalServerError, res)
+			SendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
 		res.Error = errors.New("email unavailable")
-		sendResponse(w, 307, res)
+		SendResponse(w, 307, res)
 		return
 	}
 	if UserCheck, e := DB.FindUser(NewUser.UserName); (e != nil || UserCheck != DB.Member{}) {
 		if e != nil {
 			res.Error = e
-			sendResponse(w, http.StatusInternalServerError, res)
+			SendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
 		res.Error = errors.New("username unavailable")
-		sendResponse(w, 307, res)
+		SendResponse(w, 307, res)
 		return
 	}
 	token, err := jwtauth.GenerateToken(NewUser)
 	if err != nil {
 		res.Error = err
-		sendResponse(w, 400, res)
+		SendResponse(w, 400, res)
 		return
 	}
 
@@ -98,45 +99,42 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	ok := email.SendWelcomeEmail(NewUser.Email, NewUser.Fname+NewUser.Lname, str)
 	if !ok {
 		res.Error = errors.New("error at contacting given email")
-		sendResponse(w, http.StatusBadRequest, res)
+		SendResponse(w, http.StatusBadRequest, res)
 	}
 
 	res.Success = true
 	res.Body = map[string]interface{}{
 		"Action": "Check given email for confirmation",
 	}
-	sendResponse(w, 200, res)
+	SendResponse(w, 200, res)
 }
 
-//Verify handler
-func Verify(w http.ResponseWriter, r *http.Request) {
-	tokenStr, ok := r.URL.Query()["token"]
-	var res Result
+//VerifyEmail func
+func VerifyEmail(f http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenStr, ok := r.URL.Query()["token"]
+		var res Result
 
-	if !ok || len(tokenStr[0]) < 1 {
-		res.Error = errors.New("token not found")
-		sendResponse(w, http.StatusBadRequest, res)
-		return
-	}
+		if !ok || len(tokenStr[0]) < 1 {
+			res.Error = errors.New("token not found")
+			SendResponse(w, http.StatusBadRequest, res)
+			return
+		}
 
-	NewUser, e := jwtauth.ExtractClaims(tokenStr[0])
-	if !e {
-		res.Error = errors.New("error while extracting values form token")
-		sendResponse(w, http.StatusBadRequest, res)
-		return
-	}
-	if e := DB.AddMember(NewUser); e != nil {
-		res.Error = e
-		sendResponse(w, http.StatusExpectationFailed, res)
-		return
-	}
+		NewUser, e := jwtauth.ExtractClaims(tokenStr[0])
+		if !e {
+			res.Error = errors.New("error while extracting values form token")
+			SendResponse(w, http.StatusBadRequest, res)
+			return
+		}
+		if e := database.AddMember(NewUser); e != nil {
+			res.Error = e
+			SendResponse(w, http.StatusExpectationFailed, res)
+			return
+		}
 
-	res.Success = true
-	res.Body = map[string]interface{}{
-		"Name": NewUser.UserName,
+		f.ServeHTTP(w, r)
 	}
-	sendResponse(w, http.StatusAccepted, res)
-	return
 }
 
 //Refresh handler

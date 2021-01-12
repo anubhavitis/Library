@@ -53,6 +53,10 @@ func InitDb() (*sql.DB, error) {
 
 //CreateMemberTable function
 func CreateMemberTable(db *sql.DB) error {
+	// if _, err := db.Exec("DROP TABLE users"); err != nil {
+	// 	return err
+	// }
+
 	queryUsers := `
 	CREATE TABLE IF NOT EXISTS
 	users (
@@ -71,7 +75,7 @@ func CreateMemberTable(db *sql.DB) error {
 		return err
 	}
 	fmt.Println("Users Created!")
-	ShowUsers(db)
+	// ShowUsers(db)
 	return nil
 
 }

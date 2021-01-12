@@ -14,7 +14,8 @@ type Result struct {
 	Error   error                  `json:"error"`
 }
 
-func sendResponse(w http.ResponseWriter, code int, data interface{}) bool {
+//SendResponse func
+func SendResponse(w http.ResponseWriter, code int, data interface{}) bool {
 	w.Header().Set("Content-Type", "applicaton/json")
 	w.WriteHeader(code)
 	res, err := json.Marshal(data)
