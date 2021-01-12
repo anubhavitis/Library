@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 
+	"github.com/anubhavitis/Library/apis/utility"
 	jwtauth "github.com/anubhavitis/Library/pkg/auth"
 	jwt "github.com/dgrijalva/jwt-go"
 )
@@ -17,20 +18,14 @@ type UserCred struct {
 //Auth function
 func Auth(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var res utility.Result
+		tokenStr, err := utility.GetTokenFromCookie(r)
 
-		c, err := r.Cookie("Token")
 		if err != nil {
-			if err == http.ErrNoCookie {
-				fmt.Fprintf(w, "No Cookie found!")
-				w.WriteHeader(http.StatusUnauthorized)
-				return
-			}
-			fmt.Fprintf(w, "Request Invalid!")
-			w.WriteHeader(http.StatusBadRequest)
+			res.Error = err
+			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
-
-		tokenStr := c.Value
 		claims := &jwtauth.Claims{}
 
 		tkn, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
@@ -38,18 +33,14 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 		})
 
 		if err != nil {
-			if err == jwt.ErrSignatureInvalid {
-				fmt.Fprintf(w, "UnAuthorized!")
-				w.WriteHeader(http.StatusUnauthorized)
-				return
-			}
-			fmt.Fprintf(w, "Request Invalid!"+err.Error())
-			w.WriteHeader(http.StatusBadRequest)
+			res.Error = err
+			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
+
 		if !tkn.Valid {
-			fmt.Fprintf(w, "Request Invalid!")
-			w.WriteHeader(http.StatusUnauthorized)
+			res.Error = errors.New("not authorised, please sign in")
+			utility.SendResponse(w, http.StatusUnauthorized, res)
 			return
 		}
 		f.ServeHTTP(w, r)

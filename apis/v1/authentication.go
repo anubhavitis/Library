@@ -7,7 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	auth "github.com/anubhavitis/Library/apis/middleware"
+	"github.com/anubhavitis/Library/apis/middleware"
+	"github.com/anubhavitis/Library/apis/utility"
 	DB "github.com/anubhavitis/Library/databases"
 	database "github.com/anubhavitis/Library/databases"
 	jwtauth "github.com/anubhavitis/Library/pkg/auth"
@@ -17,11 +18,11 @@ import (
 
 //SignIn handler
 func SignIn(w http.ResponseWriter, r *http.Request) {
-	var cred auth.UserCred
-	var res Result
+	var cred middleware.UserCred
+	var res utility.Result
 	if e := json.NewDecoder(r.Body).Decode(&cred); e != nil {
 		res.Error = e
-		SendResponse(w, http.StatusBadRequest, res)
+		utility.SendResponse(w, http.StatusBadRequest, res)
 		return
 	}
 
@@ -32,11 +33,11 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		if ok != nil {
 			fmt.Println(ok)
 			res.Error = ok
-			SendResponse(w, http.StatusUnauthorized, res)
+			utility.SendResponse(w, http.StatusUnauthorized, res)
 			return
 		}
 		res.Error = errors.New("username/password combination not found")
-		SendResponse(w, http.StatusUnauthorized, res)
+		utility.SendResponse(w, http.StatusUnauthorized, res)
 		return
 	}
 	fmt.Println("Checked Password")
@@ -44,7 +45,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	tokenstr, err := jwtauth.GenerateToken(user)
 	if err != nil {
 		res.Error = err
-		SendResponse(w, http.StatusInternalServerError, res)
+		utility.SendResponse(w, http.StatusInternalServerError, res)
 		return
 	}
 
@@ -55,43 +56,43 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	})
 
 	res.Success = true
-	SendResponse(w, http.StatusAccepted, res)
+	utility.SendResponse(w, http.StatusAccepted, res)
 }
 
 //SignUp handler
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var NewUser DB.Member
-	var res Result
+	var res utility.Result
 
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
 		res.Error = err
-		SendResponse(w, 400, res)
+		utility.SendResponse(w, 400, res)
 		return
 	}
 	if EmailCheck, e := DB.FindEmail(NewUser.Email); (e != nil || EmailCheck != DB.Member{}) {
 		if e != nil {
 			res.Error = e
-			SendResponse(w, http.StatusInternalServerError, res)
+			utility.SendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
 		res.Error = errors.New("email unavailable")
-		SendResponse(w, 307, res)
+		utility.SendResponse(w, 307, res)
 		return
 	}
 	if UserCheck, e := DB.FindUser(NewUser.UserName); (e != nil || UserCheck != DB.Member{}) {
 		if e != nil {
 			res.Error = e
-			SendResponse(w, http.StatusInternalServerError, res)
+			utility.SendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
 		res.Error = errors.New("username unavailable")
-		SendResponse(w, 307, res)
+		utility.SendResponse(w, 307, res)
 		return
 	}
 	token, err := jwtauth.GenerateToken(NewUser)
 	if err != nil {
 		res.Error = err
-		SendResponse(w, 400, res)
+		utility.SendResponse(w, 400, res)
 		return
 	}
 
@@ -99,37 +100,37 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	ok := email.SendWelcomeEmail(NewUser.Email, NewUser.Fname+NewUser.Lname, str)
 	if !ok {
 		res.Error = errors.New("error at contacting given email")
-		SendResponse(w, http.StatusBadRequest, res)
+		utility.SendResponse(w, http.StatusBadRequest, res)
 	}
 
 	res.Success = true
 	res.Body = map[string]interface{}{
 		"Action": "Check given email for confirmation",
 	}
-	SendResponse(w, 200, res)
+	utility.SendResponse(w, 200, res)
 }
 
 //VerifyEmail func
 func VerifyEmail(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tokenStr, ok := r.URL.Query()["token"]
-		var res Result
+		var res utility.Result
 
 		if !ok || len(tokenStr[0]) < 1 {
 			res.Error = errors.New("token not found")
-			SendResponse(w, http.StatusBadRequest, res)
+			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
 
 		NewUser, e := jwtauth.ExtractClaims(tokenStr[0])
 		if !e {
 			res.Error = errors.New("error while extracting values form token")
-			SendResponse(w, http.StatusBadRequest, res)
+			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
 		if e := database.AddMember(NewUser); e != nil {
 			res.Error = e
-			SendResponse(w, http.StatusExpectationFailed, res)
+			utility.SendResponse(w, http.StatusExpectationFailed, res)
 			return
 		}
 
