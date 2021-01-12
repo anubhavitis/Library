@@ -71,7 +71,9 @@ func CreateMemberTable(db *sql.DB) error {
 		return err
 	}
 	fmt.Println("Users Created!")
+	ShowUsers(db)
 	return nil
+
 }
 
 //FindEmail finds user with particular email, and returns it
@@ -131,4 +133,25 @@ func AddMember(mem Member) error {
 	}
 
 	return nil
+}
+
+//ShowUsers temp func
+func ShowUsers(db *sql.DB) {
+	var User Member
+
+	query := `Select * from users`
+	res, e := db.Query(query)
+
+	if e != nil {
+		return
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password); err != nil {
+			return
+		}
+		fmt.Println(User.UserName + " " + User.Password)
+	}
 }

@@ -26,6 +26,7 @@ func main() {
 
 	//Signup routes
 	r.HandleFunc("/signup", v1.SignUp)
+	r.HandleFunc("/verify", v1.Verify)
 	r.HandleFunc("/google/signup", v1.GoogleSignupHandler)
 	r.HandleFunc("/google/callback", v1.GoogleCallbackHandler)
 	r.HandleFunc("/twitter/signup", v1.TwitterSignupHandler)

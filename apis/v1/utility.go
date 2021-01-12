@@ -15,6 +15,7 @@ type Result struct {
 }
 
 func sendResponse(w http.ResponseWriter, code int, data interface{}) bool {
+	w.Header().Set("Content-Type", "applicaton/json")
 	w.WriteHeader(code)
 	res, err := json.Marshal(data)
 	if err == nil {

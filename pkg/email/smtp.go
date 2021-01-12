@@ -2,12 +2,14 @@ package email
 
 import (
 	"fmt"
-	"os"
 
 	mailjet "github.com/mailjet/mailjet-apiv3-go"
 )
 
-var key, pass = os.Getenv("SMTP_KEY"), os.Getenv("SMTP_PASS")
+// var key, pass = os.Getenv("SMTP_KEY"), os.Getenv("SMTP_PASS")
+
+var key = "4552e05a89258be962e3ae25c446a00c"
+var pass = "e479991038b74f2fb43feaf8ea78fd4b"
 
 var from = &mailjet.RecipientV31{
 	Email: "ss.lfsgd@gmail.com",
@@ -16,8 +18,8 @@ var from = &mailjet.RecipientV31{
 
 var client = mailjet.NewMailjetClient(key, pass)
 
-func SendWelcomeEmail(RecipientEmail string, RecipientName string)(bool){
-
+//SendWelcomeEmail func
+func SendWelcomeEmail(RecipientEmail string, RecipientName string, Body string) bool {
 	messagesInfo := []mailjet.InfoMessagesV31{
 		mailjet.InfoMessagesV31{
 			From: from,
@@ -28,16 +30,17 @@ func SendWelcomeEmail(RecipientEmail string, RecipientName string)(bool){
 				},
 			},
 			Subject:  "Glad to have you onboard!!",
-			TextPart: "Welcome!! Glad to be a part of your world of books.",
+			TextPart: "Welcome!! Glad to be a part of your world of books. https://" + Body,
 			HTMLPart: "",
 		},
 	}
 	messages := mailjet.MessagesV31{Info: messagesInfo}
 	res, err := client.SendMailV31(&messages)
 	if err != nil {
-		fmt.Println("error while sending mail",err)
+		fmt.Println("error while sending mail", err)
 		return false
 	}
-   fmt.Println(res.ResultsV31)
-   return true
+
+	fmt.Println(res.ResultsV31)
+	return true
 }
