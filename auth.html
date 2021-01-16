@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- ... -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" />
+
+</head>
+
+<body class="bg-gray-200">
+    <div id="Navbar" class="w-full rounded-lg text-gray-700 bg-white dark-mode:text-gray-200 dark-mode:bg-gray-800">
+        <div x-data="{ open: false }"
+            class="flex flex-col max-w-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8">
+            <div class="p-4 flex flex-row items-center justify-between">
+                <a href="#"
+                    class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">LIBRARY</a>
+                <button class="md:hidden rounded-lg focus:outline-none focus:shadow-outline" @click="open = !open">
+                    <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+                        <path x-show="!open" fill-rule="evenodd"
+                            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"
+                            clip-rule="evenodd"></path>
+                        <path x-show="open" fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+            <nav :class="{'flex': open, 'hidden': !open}"
+                class="flex-col flex-grow pb-4 md:pb-0 hidden md:flex md:justify-end md:flex-row">
+                <a class="px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                    href="#">Blog</a>
+                <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                    href="#">Portfolio</a>
+                <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                    href="#">About</a>
+                <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                    href="#">Contact</a>
+                <div @click.away="open = false" class="relative" x-data="{ open: false }">
+                    <button @click="open = !open"
+                        class="flex flex-row items-center w-full px-4 py-2 mt-2 text-sm font-semibold text-left bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:focus:bg-gray-600 dark-mode:hover:bg-gray-600 md:w-auto md:inline md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+                        <span>Dropdown</span>
+                        <svg fill="currentColor" viewBox="0 0 20 20" :class="{'rotate-180': open, 'rotate-0': !open}"
+                            class="inline w-4 h-4 mt-1 ml-1 transition-transform duration-200 transform md:-mt-1">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="transform opacity-0 scale-95"
+                        x-transition:enter-end="transform opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-75"
+                        x-transition:leave-start="transform opacity-100 scale-100"
+                        x-transition:leave-end="transform opacity-0 scale-95"
+                        class="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
+                        <div class="px-2 py-2 bg-white rounded-md shadow dark-mode:bg-gray-800">
+                            <a class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                                href="#">Link #1</a>
+                            <a class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                                href="#">Link #2</a>
+                            <a class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                                href="#">Link #3</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- This is Sign-In tab -->
+    <div id="signin" class="py-6">
+        <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
+            <div class="hidden lg:block lg:w-1/2 bg-cover" style="background-image: url(books.jpg)"></div>
+            <div class="w-full p-8 lg:w-1/2">
+                <h2 class="text-2xl font-semibold text-gray-700 text-center">
+                    Welcome back!
+                </h2>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="border-b w-1/5 lg:w-1/4"></span>
+                    <p class="text-xs text-center text-gray-500 uppercase">Login using</p>
+                    <span class="border-b w-1/5 lg:w-1/4"></span>
+                </div>
+                <div class="flex justify-center">
+                    <a href="#"
+                        class="flex items-center justify-center mt-4 text-white rounded-full shadow-md hover:bg-gray-100 m-2">
+                        <div class="px-3 py-3">
+                            <svg class="h-6 w-6" viewBox="0 0 40 40">
+                                <path
+                                    d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
+                                    fill="#FFC107" />
+                                <path
+                                    d="M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z"
+                                    fill="#FF3D00" />
+                                <path
+                                    d="M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z"
+                                    fill="#4CAF50" />
+                                <path
+                                    d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758C26.0142 27.975 26.015 27.975 26.0158 27.9742L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
+                                    fill="#1976D2" />
+                            </svg>
+                        </div>
+                    </a>
+                    <a href="#"
+                        class="flex items-center justify-center mt-4 text-white rounded-full shadow-md hover:bg-gray-100 m-2">
+                        <div class="px-3 py-3">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" >
+                                <linearGradient id="_osn9zIN2f6RhTsY8WhY4a" x1="10.341" x2="40.798" y1="8.312"
+                                    y2="38.769" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#2aa4f4" />
+                                    <stop offset="1" stop-color="#007ad9" />
+                                </linearGradient>
+                                <path fill="url(#_osn9zIN2f6RhTsY8WhY4a)"
+                                    d="M46.105,11.02c-1.551,0.687-3.219,1.145-4.979,1.362c1.789-1.062,3.166-2.756,3.812-4.758	c-1.674,0.981-3.529,1.702-5.502,2.082C37.86,8.036,35.612,7,33.122,7c-4.783,0-8.661,3.843-8.661,8.582	c0,0.671,0.079,1.324,0.226,1.958c-7.196-0.361-13.579-3.782-17.849-8.974c-0.75,1.269-1.172,2.754-1.172,4.322	c0,2.979,1.525,5.602,3.851,7.147c-1.42-0.043-2.756-0.438-3.926-1.072c0,0.026,0,0.064,0,0.101c0,4.163,2.986,7.63,6.944,8.419	c-0.723,0.198-1.488,0.308-2.276,0.308c-0.559,0-1.104-0.063-1.632-0.158c1.102,3.402,4.299,5.889,8.087,5.963	c-2.964,2.298-6.697,3.674-10.756,3.674c-0.701,0-1.387-0.04-2.065-0.122C7.73,39.577,12.283,41,17.171,41	c15.927,0,24.641-13.079,24.641-24.426c0-0.372-0.012-0.742-0.029-1.108C43.483,14.265,44.948,12.751,46.105,11.02" />
+                            </svg>
+                        </div>
+                    </a>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="border-b w-1/5 lg:w-1/4"></span>
+                    <p class="text-xs text-center text-gray-500 uppercase">or login with email</p>
+                    <span class="border-b w-1/5 lg:w-1/4"></span>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+                    <input
+                        class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        id="login_email" type="email" placeholder="Enter Email Address..." />
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <p id="goToForget"
+                            class="text-sm font-bold text-red-300 hover:text-red-500 hover:text-s cursor-pointer">Forgot password?</p>
+                    </div>
+                    <input
+                        class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        id="login_password" type="password" placeholder="password" />
+                </div>
+                <div class="mt-8">
+                    <button
+                        class="w-full px-4 py-2 font-bold text-white bg-green-500 rounded-full hover:bg-green-700 focus:outline-none focus:shadow-outline">
+                        Login
+                    </button>
+                </div>
+                <div class="text-center">
+                    <p id="goToSignUp"
+                        class="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800 cursor-pointer">
+                        New here? Create an Account!
+                    </p>
+                </div>
+            </div>
+        </div>
+        </giv>
+
+        <!-- This is sign up tab -->
+        <div id="signup" class="py-6">
+            <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
+                <div class="hidden lg:block lg:w-1/2 bg-cover" style="
+            background-image: url(lib.jpg);
+          "></div>
+                <div class="w-full p-8 lg:w-1/2">
+                    <h2 class="text-2xl font-semibold text-gray-700 text-center">
+                        Register now!
+                    </h2>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="border-b w-1/5 lg:w-1/4"></span>
+                        <p class="text-xs text-center text-gray-500 uppercase">Signup using</p>
+                        <span class="border-b w-1/5 lg:w-1/4"></span>
+                    </div>
+                    <div class="flex justify-center">
+                        <a href="#"
+                            class="flex items-center justify-center mt-4 text-white rounded-full shadow-md hover:bg-gray-100 m-2">
+                            <div class="px-3 py-3">
+                                <svg class="h-6 w-6" viewBox="0 0 40 40">
+                                    <path
+                                        d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
+                                        fill="#FFC107" />
+                                    <path
+                                        d="M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z"
+                                        fill="#FF3D00" />
+                                    <path
+                                        d="M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z"
+                                        fill="#4CAF50" />
+                                    <path
+                                        d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758C26.0142 27.975 26.015 27.975 26.0158 27.9742L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
+                                        fill="#1976D2" />
+                                </svg>
+                            </div>
+                        </a>
+                        <a href="#"
+                            class="flex items-center justify-center mt-4 text-white rounded-full shadow-md hover:bg-gray-100 m-2">
+                            <div class="px-3 py-3">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" >
+                                    <linearGradient id="_osn9zIN2f6RhTsY8WhY4a" x1="10.341" x2="40.798" y1="8.312"
+                                        y2="38.769" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0" stop-color="#2aa4f4" />
+                                        <stop offset="1" stop-color="#007ad9" />
+                                    </linearGradient>
+                                    <path fill="url(#_osn9zIN2f6RhTsY8WhY4a)"
+                                        d="M46.105,11.02c-1.551,0.687-3.219,1.145-4.979,1.362c1.789-1.062,3.166-2.756,3.812-4.758	c-1.674,0.981-3.529,1.702-5.502,2.082C37.86,8.036,35.612,7,33.122,7c-4.783,0-8.661,3.843-8.661,8.582	c0,0.671,0.079,1.324,0.226,1.958c-7.196-0.361-13.579-3.782-17.849-8.974c-0.75,1.269-1.172,2.754-1.172,4.322	c0,2.979,1.525,5.602,3.851,7.147c-1.42-0.043-2.756-0.438-3.926-1.072c0,0.026,0,0.064,0,0.101c0,4.163,2.986,7.63,6.944,8.419	c-0.723,0.198-1.488,0.308-2.276,0.308c-0.559,0-1.104-0.063-1.632-0.158c1.102,3.402,4.299,5.889,8.087,5.963	c-2.964,2.298-6.697,3.674-10.756,3.674c-0.701,0-1.387-0.04-2.065-0.122C7.73,39.577,12.283,41,17.171,41	c15.927,0,24.641-13.079,24.641-24.426c0-0.372-0.012-0.742-0.029-1.108C43.483,14.265,44.948,12.751,46.105,11.02" />
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="border-b w-1/5 lg:w-1/4"></span>
+                        <p class="text-xs text-center text-gray-500 uppercase">or signup manually</p>
+                        <span class="border-b w-1/5 lg:w-1/4"></span>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+                        <input
+                            class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            id="new_email" type="email" placeholder="Enter Email Address..." />
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                        <input
+                            class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            id="new_uname" type="text" placeholder="Enter unique Username" />
+                    </div>
+                    <div class="flex justify-between">
+                        <div class="mt-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">First Name</label>
+                            <input
+                                class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                id="new_fname" type="text" placeholder="First name" />
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Second Name</label>
+                            <input
+                                class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                id="new_sname" type="sname" placeholder="Second name" />
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">College Name</label>
+                        <input
+                            class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            id="new_college" type="text" placeholder="Full college name" />
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <input
+                            class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            id="new_password" type="password" placeholder="Enter password" />
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+
+                        <input
+                            class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            id="new_cpassword" type="password" placeholder="Enter same password again" />
+                    </div>
+                    <div class="mt-8">
+                        <button
+                            class="w-full px-4 py-2 font-bold text-white bg-gray-700 rounded-full hover:bg-gray-900 focus:outline-none focus:shadow-outline">
+                            SignUp
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <p id="GoToSignIn"
+                            class="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800 cursor-pointer">
+                            Already have an account? Login!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot password tab -->
+
+        <div id="forget" class="container mx-auto">
+            <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
+                <div class="hidden lg:block lg:w-1/2 bg-cover" style="
+            background-image: url('https://source.unsplash.com/oWTW-jNGl9I/600x800');
+          "></div>
+
+                <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none">
+                    <div class="px-8 mb-4 text-center">
+                        <h3 class="pt-4 mb-2 text-2xl">Forgot Your Password?</h3>
+                        <p class="mb-4 text-sm text-gray-700">
+                            We get it, stuff happens. Just enter your email address below and
+                            we'll send you a link to reset your password!
+                        </p>
+                    </div>
+                    <form class="px-8 pt-6 pb-8 mb-4 bg-white rounded">
+                        <div class="mb-4">
+                            <label class="block mb-2 text-sm font-bold text-gray-700" for="email">
+                                Email
+                            </label>
+                            <input
+                                class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                id="email" type="email" placeholder="Enter Email Address..." />
+                        </div>
+                        <div class="mb-6 text-center">
+                            <button
+                                class="w-full px-4 py-2 font-bold text-white bg-red-500 rounded-full hover:bg-red-700 focus:outline-none focus:shadow-outline"
+                                type="button">
+                                Reset Password
+                            </button>
+                        </div>
+                        <hr class="mb-6 border-t" />
+                        <div class="text-center">
+                            <p id="goToSignUp"
+                                class="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800 cursor-pointer">
+                                Create an Account!
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <p id="goToSignIn"
+                                class="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800 cursor-pointer">
+                                Already have an account? Login!
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+<script type="" src="style/home.js"></script>
+
+</html>
