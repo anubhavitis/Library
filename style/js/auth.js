@@ -31,12 +31,15 @@ export function Register() {
   var college = document.getElementById("new_college").value;
   var password = document.getElementById("new_password").value;
   var cpassword = document.getElementById("new_cpassword").value;
+  
 
-  if(password!=cpassword){
-    console.log("Passwords do not match")
+  if (password != cpassword) {
+    console.log("Passwords do not match");
     return;
   }
 
+  console.log("Restering " + uname);
+  
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -56,7 +59,10 @@ export function Register() {
     redirect: "follow",
   };
 
-  fetch("https://cors-anywhere.herokuapp.com/https://libraryz.herokuapp.com/signup", requestOptions)
+  fetch(
+    "https://cors-anywhere.herokuapp.com/https://libraryz.herokuapp.com/signup",
+    requestOptions
+  )
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.log("error", error));
