@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-
+	"github.com/gorilla/handlers"
 	"github.com/anubhavitis/Library/apis/middleware"
 	v1 "github.com/anubhavitis/Library/apis/v1"
 	database "github.com/anubhavitis/Library/databases"
@@ -21,6 +21,9 @@ func main() {
 	database.Mydb = Mydb
 
 	r := mux.NewRouter().StrictSlash(true)
+	headers := handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"})
+	methods := handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE"})
+	origins := handlers.AllowedOrigins([]string{"*"})
 	r.HandleFunc("/", v1.Homepage)
 
 	//Signup routes
@@ -38,7 +41,7 @@ func main() {
 	r.HandleFunc("/deletebook", middleware.Auth(v1.DeleteBook))
 	r.HandleFunc("/updatebook", middleware.Auth(v1.UpdateBookInfo))
 	r.HandleFunc("/getallbook", middleware.Auth(v1.GetBook))
-	http.Handle("/", r)
+	http.Handle("/", handlers.CORS(headers, methods, origins)(r))
 
 	port := os.Getenv("PORT")
 	if port == "" {
