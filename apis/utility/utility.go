@@ -17,6 +17,9 @@ type Result struct {
 //SendResponse func
 func SendResponse(w http.ResponseWriter, code int, data interface{}) bool {
 	w.Header().Set("Content-Type", "applicaton/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	w.WriteHeader(code)
 	res, err := json.Marshal(data)
 	if err == nil {

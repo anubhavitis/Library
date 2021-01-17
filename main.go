@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/anubhavitis/Library/apis/middleware"
 	v1 "github.com/anubhavitis/Library/apis/v1"
@@ -10,8 +11,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
-
-var port = "8080"
 
 func main() {
 
@@ -40,5 +39,10 @@ func main() {
 	r.HandleFunc("/updatebook", middleware.Auth(v1.UpdateBookInfo))
 	r.HandleFunc("/getallbook", middleware.Auth(v1.GetBook))
 	http.Handle("/", r)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	http.ListenAndServe(":"+port, nil)
 }

@@ -75,7 +75,7 @@ func CreateMemberTable(db *sql.DB) error {
 		return err
 	}
 	fmt.Println("Users Created!")
-	// ShowUsers(db)
+	ShowUsers(db)
 	return nil
 
 }
