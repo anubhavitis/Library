@@ -96,7 +96,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	str := "localhost:8080/verify?token=" + token
+	str := "https://libraryz.herokuapp.com/verify?token=" + token
 	ok := email.SendWelcomeEmail(NewUser.Email, NewUser.Fname+NewUser.Lname, str)
 	if !ok {
 		res.Error = errors.New("error at contacting given email")

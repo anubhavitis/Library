@@ -30,8 +30,8 @@ func SendWelcomeEmail(RecipientEmail string, RecipientName string, Body string) 
 				},
 			},
 			Subject:  "Glad to have you onboard!!",
-			TextPart: "Welcome!! Glad to be a part of your world of books. https://" + Body,
-			HTMLPart: "",
+			TextPart: "Welcome!! Glad to be a part of your world of books. " + Body,
+			HTMLPart: `<br><html><body><center><a href="` + Body + `"> Click here </a></center></body></html>`,
 		},
 	}
 	messages := mailjet.MessagesV31{Info: messagesInfo}
