@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"github.com/gorilla/handlers"
+
 	"github.com/anubhavitis/Library/apis/middleware"
 	v1 "github.com/anubhavitis/Library/apis/v1"
 	database "github.com/anubhavitis/Library/databases"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -28,7 +29,7 @@ func main() {
 
 	//Signup routes
 	r.HandleFunc("/signup", v1.SignUp)
-	r.HandleFunc("/verify", v1.VerifyEmail(v1.Homepage))
+	r.HandleFunc("/verify", v1.VerifyEmail(v1.Verified))
 	r.HandleFunc("/google/signup", v1.GoogleSignupHandler)
 	r.HandleFunc("/google/callback", v1.GoogleCallbackHandler)
 	r.HandleFunc("/twitter/signup", v1.TwitterSignupHandler)

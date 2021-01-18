@@ -33,7 +33,7 @@ func SendWelcomeEmail(RecipientEmail string, RecipientName string, Body string) 
 			TextPart: "Welcome!! Glad to be a part of your world of books. " + Body,
 			HTMLPart: `
 			<html>
-				<body style="background:lightblue;">
+				<body>
 					<center>
 						<img src="https://user-images.githubusercontent.com/26124625/104884138-dd1e2a80-598b-11eb-8b8e-bb2a23db022e.jpg" style=" height:auto; width: 500px; border-radius: 25px; margin:5px;"/>
 						<div style="border: 1px solid grey; border-radius: 25px; box-shadow: 2px 2px 2px; background:lightgrey; margin:10px; width: 500px; padding:10px;">
