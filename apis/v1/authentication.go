@@ -203,3 +203,17 @@ func Homepage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, html)
 
 }
+
+//Verified handler
+func Verified(w http.ResponseWriter, r *http.Request) {
+	Newurl := "https://anubhavitis.github.io/Library"
+	html := `
+	<html> <body> 
+		<h1> Thanks for signing up with Library! </h1>
+		<p> You'll be redirected to login page, else 
+		<a href="` + Newurl + `"> Click here</a> </p>
+	</body> </html>`
+
+	fmt.Fprintln(w, html)
+	http.Redirect(w, r, Newurl, http.StatusSeeOther)
+}
