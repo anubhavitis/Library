@@ -14,10 +14,7 @@ export function Login() {
     redirect: "follow",
   };
 
-  fetch(
-    "https://cors-anywhere.herokuapp.com/https://libraryz.herokuapp.com/signin",
-    requestOptions
-  )
+  fetch("https://libraryz.herokuapp.com/signin", requestOptions)
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.log("error", error));
@@ -31,7 +28,6 @@ export function Register() {
   var college = document.getElementById("new_college").value;
   var password = document.getElementById("new_password").value;
   var cpassword = document.getElementById("new_cpassword").value;
-  
 
   if (password != cpassword) {
     console.log("Passwords do not match");
@@ -39,7 +35,7 @@ export function Register() {
   }
 
   console.log("Restering " + uname);
-  
+
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -59,10 +55,7 @@ export function Register() {
     redirect: "follow",
   };
 
-  fetch(
-    "https://cors-anywhere.herokuapp.com/https://libraryz.herokuapp.com/signup",
-    requestOptions
-  )
+  fetch("https://libraryz.herokuapp.com/signup", requestOptions)
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.log("error", error));
