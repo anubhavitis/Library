@@ -212,7 +212,11 @@ func Verified(w http.ResponseWriter, r *http.Request) {
 		<h1> Thanks for signing up with Library! </h1>
 		<p> You'll be redirected to login page, else 
 		<a href="` + Newurl + `"> Click here</a> </p>
-	</body> </html>`
+	</body> 
+	<script>
+	setTimeout(function(){window.location.href ="` + Newurl + `"  }, 5000);
+	</script>
+	</html>`
 
 	fmt.Fprintln(w, html)
 	http.Redirect(w, r, Newurl, http.StatusSeeOther)
