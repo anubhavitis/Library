@@ -2,7 +2,6 @@ package v1
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -21,7 +20,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	var cred middleware.UserCred
 	var res utility.Result
 	if e := json.NewDecoder(r.Body).Decode(&cred); e != nil {
-		res.Error = e
+		res.Error = fmt.Sprintf("%s", e)
 		utility.SendResponse(w, http.StatusBadRequest, res)
 		return
 	}
@@ -32,11 +31,11 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	if (ok != nil || user == DB.Member{} || user.Password != cred.Password) {
 		if ok != nil {
 			fmt.Println(ok)
-			res.Error = ok
+			res.Error = fmt.Sprintf("%s", ok)
 			utility.SendResponse(w, http.StatusUnauthorized, res)
 			return
 		}
-		res.Error = errors.New("username/password combination not found")
+		res.Error = "username/password combination not found"
 		utility.SendResponse(w, http.StatusUnauthorized, res)
 		return
 	}
@@ -44,7 +43,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	tokenstr, err := jwtauth.GenerateToken(user)
 	if err != nil {
-		res.Error = err
+		res.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, http.StatusInternalServerError, res)
 		return
 	}
@@ -65,33 +64,33 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	var res utility.Result
 
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
-		res.Error = err
+		res.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, 400, res)
 		return
 	}
 	if EmailCheck, e := DB.FindEmail(NewUser.Email); (e != nil || EmailCheck != DB.Member{}) {
 		if e != nil {
-			res.Error = e
+			res.Error = fmt.Sprintf("%s", e)
 			utility.SendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
-		res.Error = errors.New("email unavailable")
+		res.Error = "email unavailable"
 		utility.SendResponse(w, 307, res)
 		return
 	}
 	if UserCheck, e := DB.FindUser(NewUser.UserName); (e != nil || UserCheck != DB.Member{}) {
 		if e != nil {
-			res.Error = e
+			res.Error = fmt.Sprintf("%s", e)
 			utility.SendResponse(w, http.StatusInternalServerError, res)
 			return
 		}
-		res.Error = errors.New("username unavailable")
+		res.Error = "username unavailable"
 		utility.SendResponse(w, 307, res)
 		return
 	}
 	token, err := jwtauth.GenerateToken(NewUser)
 	if err != nil {
-		res.Error = err
+		res.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, 400, res)
 		return
 	}
@@ -99,7 +98,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	str := "https://libraryz.herokuapp.com/verify?token=" + token
 	ok := email.SendWelcomeEmail(NewUser.Email, NewUser.Fname+NewUser.Lname, str)
 	if !ok {
-		res.Error = errors.New("error at contacting given email")
+		res.Error = "error at contacting given email"
 		utility.SendResponse(w, http.StatusBadRequest, res)
 	}
 
@@ -117,19 +116,19 @@ func VerifyEmail(f http.HandlerFunc) http.HandlerFunc {
 		var res utility.Result
 
 		if !ok || len(tokenStr[0]) < 1 {
-			res.Error = errors.New("token not found")
+			res.Error = "token not found"
 			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
 
 		NewUser, e := jwtauth.ExtractClaims(tokenStr[0])
 		if !e {
-			res.Error = errors.New("error while extracting values form token")
+			res.Error = "error while extracting values form token"
 			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
 		if e := database.AddMember(NewUser); e != nil {
-			res.Error = e
+			res.Error = fmt.Sprintf("%s", e)
 			utility.SendResponse(w, http.StatusExpectationFailed, res)
 			return
 		}

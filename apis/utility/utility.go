@@ -11,7 +11,7 @@ import (
 type Result struct {
 	Success bool                   `json:"success"`
 	Body    map[string]interface{} `json:"body"`
-	Error   error                  `json:"error"`
+	Error   string                 `json:"error"`
 }
 
 //SendResponse func

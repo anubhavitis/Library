@@ -2,7 +2,7 @@ package v1
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/anubhavitis/Library/apis/middleware"
@@ -16,7 +16,7 @@ func AddBook(w http.ResponseWriter, r *http.Request) {
 	var book Db.Book
 
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		resp.Error = err
+		resp.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, http.StatusBadRequest, resp)
 	}
 
@@ -24,7 +24,7 @@ func AddBook(w http.ResponseWriter, r *http.Request) {
 	book.Likes = 0
 
 	if err = Db.AddBook(book); err != nil {
-		resp.Error = errors.New("error while adding book to database")
+		resp.Error = "error while adding book to database"
 		utility.SendResponse(w, 400, resp)
 		return
 	}
@@ -37,13 +37,13 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	var book Db.Book
 	var res utility.Result
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		res.Error = err
+		res.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, http.StatusBadRequest, res)
 		return
 	}
 
 	if _, e := Db.DeleteBook(book.UID); e != nil {
-		res.Error = e
+		res.Error = fmt.Sprintf("%s", e)
 		utility.SendResponse(w, http.StatusConflict, res)
 		return
 	}
@@ -57,13 +57,13 @@ func UpdateBookInfo(w http.ResponseWriter, r *http.Request) {
 	var book Db.Book
 	var res utility.Result
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		res.Error = err
+		res.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, http.StatusBadRequest, res)
 		return
 	}
 
 	if _, e := Db.UpdateBook(book); e != nil {
-		res.Error = e
+		res.Error = fmt.Sprintf("%s", e)
 		utility.SendResponse(w, http.StatusConflict, res)
 		return
 	}
@@ -78,14 +78,14 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 	var user middleware.UserCred
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		res.Error = err
+		res.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, http.StatusBadRequest, res)
 		return
 	}
 
 	books, err := Db.ListUserBooks(user.Username)
 	if err != nil {
-		res.Error = err
+		res.Error = fmt.Sprintf("%s", err)
 		utility.SendResponse(w, http.StatusConflict, res)
 		return
 	}

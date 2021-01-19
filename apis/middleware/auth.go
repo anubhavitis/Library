@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/anubhavitis/Library/apis/utility"
@@ -22,7 +22,7 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 		tokenStr, err := utility.GetTokenFromCookie(r)
 
 		if err != nil {
-			res.Error = err
+			res.Error = fmt.Sprintf("%s", err)
 			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
@@ -33,13 +33,13 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 		})
 
 		if err != nil {
-			res.Error = err
+			res.Error = fmt.Sprintf("%s", err)
 			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
 
 		if !tkn.Valid {
-			res.Error = errors.New("not authorised, please sign in")
+			res.Error = "not authorised, please sign in"
 			utility.SendResponse(w, http.StatusUnauthorized, res)
 			return
 		}
