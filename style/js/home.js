@@ -1,6 +1,6 @@
 import {
     ToggleToForget, ToggleToSignIn, ToggleToSignUp
-} from "./authCard.js"
+} from "./changeCard.js"
 
 import {
     Login, Register
@@ -15,8 +15,10 @@ document.getElementById("goToForget").onclick = function(){ ToggleToForget(); }
 document.getElementById("login").onclick= function() { Login(); }
 document.getElementById("register").onclick= function() { Register(); }
 
+
 window.onload = function () {
     // ToggleToSignIn()
+    console.log("Welcome");
     ToggleToSignIn()
 }
 

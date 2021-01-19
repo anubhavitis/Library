@@ -1,3 +1,4 @@
+
 export function Login() {
   var username = document.getElementById("login_uname").value;
   var password = document.getElementById("login_password").value;
@@ -30,7 +31,7 @@ export function Register() {
   var cpassword = document.getElementById("new_cpassword").value;
 
   if (password != cpassword) {
-    console.log("Passwords do not match");
+    swal("Passwords do not match", "Please try again.", "error")
     return;
   }
 
@@ -56,7 +57,11 @@ export function Register() {
   };
 
   fetch("https://libraryz.herokuapp.com/signup", requestOptions)
-    .then((response) => response.text())
-    .then((result) => console.log(result))
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result)
+      if(result.success=="true") swal("Hello, "+uname, "Check your email to complete your registration.", "success")
+      else swal("Uh Oh!", result.error, "error");
+    })
     .catch((error) => console.log("error", error));
 }
