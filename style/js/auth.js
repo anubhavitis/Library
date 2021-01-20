@@ -15,10 +15,12 @@ export function Login() {
   fetch("https://libraryz.herokuapp.com/signin", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-      if(result.success==true) swal("Welcome back!", "Your books waited for you!", "success")
-      else swal("Uh oh!", result.error, "error")
-    })
-    .catch((error) => console.log("error", error));
+      if (result.success == true)
+        swal.fire("Welcome back!", "Your books waited for you!", "success");
+      else {
+        swal.fire("Oh oh!", result.error, "error");
+      }
+    });
 }
 
 export function Register() {
@@ -31,11 +33,9 @@ export function Register() {
   var cpassword = document.getElementById("new_cpassword").value;
 
   if (password != cpassword) {
-    swal("Passwords do not match", "Please try again.", "error")
+    swal.fire("Passwords do not match", "Please try again.", "error");
     return;
   }
-
-  console.log("Restering " + uname);
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -59,8 +59,29 @@ export function Register() {
   fetch("https://libraryz.herokuapp.com/signup", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-      console.log(result)
-      if(result.success==true) swal("Hello, "+uname, "Check your email to complete your registration.", "success")
-      else swal("Uh Oh!", result.error, "error");
-    })
+      console.log(result);
+      if (result.success == true)
+        swal.fire(
+          "Hello, " + uname,
+          "Check your email to complete your registration.",
+          "success"
+        );
+      else swal.fire("Uh Oh!", result.error, "error");
+    });
 }
+
+export function GoogleSignUp() {
+  
+  helper()
+}
+
+const helper = async () => {
+  const { value: url } = await Swal.fire({
+    title: "Please enter your college",
+    input: "text",
+    inputLabel: "Your college name",
+    inputPlaceholder: "E.g. JSS Noida",
+  });
+
+  console.log(url);
+};

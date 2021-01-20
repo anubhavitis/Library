@@ -3,7 +3,7 @@ import {
 } from "./changeCard.js"
 
 import {
-    Login, Register
+    Login, Register, GoogleSignUp
 } from "./auth.js"
 
 document.getElementById("goToSignInf").onclick= function(){ ToggleToSignIn(); };
@@ -15,10 +15,10 @@ document.getElementById("goToForget").onclick = function(){ ToggleToForget(); }
 document.getElementById("login").onclick= function() { Login(); }
 document.getElementById("register").onclick= function() { Register(); }
 
+document.getElementById("google_signup").onclick= function() { GoogleSignUp(); }
 
 window.onload = function () {
     // ToggleToSignIn()
-    console.log("Welcome");
     ToggleToSignIn()
 }
 
