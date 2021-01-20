@@ -213,10 +213,9 @@ func Verified(w http.ResponseWriter, r *http.Request) {
 		<a href="` + Newurl + `"> Click here</a> </p>
 	</body> 
 	<script>
-	setTimeout(function(){window.location.href ="` + Newurl + `"  }, 5000);
+	setTimeout(function(){window.location.href ="` + Newurl + `"  }, 3000);
 	</script>
 	</html>`
 
 	fmt.Fprintln(w, html)
-	http.Redirect(w, r, Newurl, 301)
 }
