@@ -63,5 +63,4 @@ export function Register() {
       if(result.success==true) swal("Hello, "+uname, "Check your email to complete your registration.", "success")
       else swal("Uh Oh!", result.error, "error");
     })
-    .catch((error) => console.log("error", error));
 }
