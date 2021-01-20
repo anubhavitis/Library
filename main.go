@@ -27,8 +27,9 @@ func main() {
 	origins := handlers.AllowedOrigins([]string{"*"})
 	r.HandleFunc("/", v1.Homepage)
 
-	//Signup routes
 	r.HandleFunc("/signup", v1.SignUp)
+	r.HandleFunc("/googlesignup", v1.GoogleSignupHandler)
+	r.HandleFunc("/google_callback", v1.GoogleCallbackHandler)
 	r.HandleFunc("/verify", v1.VerifyEmail(v1.Verified))
 	r.HandleFunc("/google/signup", v1.GoogleSignupHandler)
 	r.HandleFunc("/google/callback", v1.GoogleCallbackHandler)
@@ -46,7 +47,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8000"
 	}
 	http.ListenAndServe(":"+port, nil)
 }

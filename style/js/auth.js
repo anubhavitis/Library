@@ -1,9 +1,7 @@
-
 export function Login() {
   var username = document.getElementById("login_uname").value;
   var password = document.getElementById("login_password").value;
 
-  console.log(username+" "+password)
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   var raw = JSON.stringify({ username: username, password: password });
@@ -14,9 +12,12 @@ export function Login() {
     redirect: "follow",
   };
 
-  fetch("https://cors-anywhere.herokuapp.com/https://libraryz.herokuapp.com/signin", requestOptions)
-    .then((response) => response.text())
-    .then((result) => console.log(result))
+  fetch("https://libraryz.herokuapp.com/signin", requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      if(result.success==true) swal("Welcome back!", "Your books waited for you!", "success")
+      else swal("Uh oh!", result.error, "error")
+    })
     .catch((error) => console.log("error", error));
 }
 
@@ -59,7 +60,7 @@ export function Register() {
     .then((response) => response.json())
     .then((result) => {
       console.log(result)
-      if(result.success=="true") swal("Hello, "+uname, "Check your email to complete your registration.", "success")
+      if(result.success==true) swal("Hello, "+uname, "Check your email to complete your registration.", "success")
       else swal("Uh Oh!", result.error, "error");
     })
     .catch((error) => console.log("error", error));

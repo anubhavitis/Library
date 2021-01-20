@@ -218,5 +218,5 @@ func Verified(w http.ResponseWriter, r *http.Request) {
 	</html>`
 
 	fmt.Fprintln(w, html)
-	http.Redirect(w, r, Newurl, http.StatusSeeOther)
+	http.Redirect(w, r, Newurl, 301)
 }

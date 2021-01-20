@@ -6,32 +6,35 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/anubhavitis/Library/apis/utility"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
 
 type credential struct {
-	Cid     string `json:"cid,omitempty"`
-	Csecret string `json:"csecret,omitempty"`
+	Cid      string `json:"client_id"`
+	Csecret  string `json:"client_secret"`
+	Redirect string `json:"redirect_uris"`
 }
 
 var cred credential
 
 func init() {
 
-	f, err := ioutil.ReadFile("./config.json")
+	f, err := ioutil.ReadFile("apis/v1/googleauth.json")
 	if err != nil {
 		fmt.Println("could not read the file:", err)
 	}
 	err = json.Unmarshal(f, &cred)
-	fmt.Println(err, cred)
+	// fmt.Println(err, cred)
 }
 
 var (
 	googleOauthConfig = &oauth2.Config{
-		RedirectURL:  "http://localhost:8000/google/callback",
-		ClientID:     cred.Cid,
-		ClientSecret: cred.Csecret,
+
+		RedirectURL:  "http://localhost:8000/google_callback",
+		ClientID:     "68309862236-0tpmf7scq3plc9ijbbfubrdh7kng9qdd.apps.googleusercontent.com",
+		ClientSecret: "dLOrJJIy-xI_lczuJgAjP97G",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.profile",
 			"https://www.googleapis.com/auth/userinfo.email",
@@ -54,43 +57,56 @@ func GoogleSignupHandler(w http.ResponseWriter, r *http.Request) {
 
 //GoogleCallbackHandler func
 func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	var res utility.Result
+
 	if r.FormValue("state") != randomState {
-		fmt.Println("State is not valid")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		res.Error = "State is not valid"
+		utility.SendResponse(w, http.StatusConflict, res)
 		return
 	}
 
 	token, err := googleOauthConfig.Exchange(oauth2.NoContext, r.FormValue("code"))
 	if err != nil {
-		fmt.Println("State is not valid")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		res.Error = fmt.Sprintf("%s", err)
+		utility.SendResponse(w, http.StatusConflict, res)
 		return
 	}
 
 	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
 	if err != nil {
-		fmt.Println("Could not get request")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		res.Error = fmt.Sprintf("%s", err)
+		utility.SendResponse(w, http.StatusConflict, res)
 		return
 	}
 
 	defer resp.Body.Close()
-	content, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Could not parse response")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-		return
+
+	var user struct {
+		ID      string `json:"id"`
+		Email   string `json:"email"`
+		Name    string `json:"name"`
+		Fname   string `json:"given_name"`
+		Sname   string `json:"family_name"`
+		Picture string `json:"picture"`
 	}
 
-	fmt.Fprintf(w, "Response: %s", content)
+	err = json.NewDecoder(resp.Body).Decode(&user)
+	if err != nil {
+		res.Error = fmt.Sprintf("%s", err)
+		utility.SendResponse(w, 400, res)
+	}
+
+	res.Success = true
+	res.Body = map[string]interface{}{
+		"content": user,
+	}
+	utility.SendResponse(w, 202, res)
 }
 
-// func main() {
-// 	http.HandleFunc("/", handleHome)
+func main() {
 
-// 	//Google Oauths
-// 	http.HandleFunc("/login", handleLogin)
-// 	http.HandleFunc("/callback", handleCallback)
+	//Google Oauths
+	http.HandleFunc("/login", GoogleSignupHandler)
+	http.HandleFunc("/callback", GoogleCallbackHandler)
 
-// 	http.ListenAndServe(":8080", nil)
-// }
+}
