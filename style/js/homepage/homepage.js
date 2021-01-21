@@ -20,10 +20,10 @@ window.onload = function () {
 
   tokenStr = localStorage.getItem("token");
   console.log("token: " + tokenStr);
-  // if (tokenStr == null) document.getElementById("logout").click();
+  if (tokenStr == null) document.getElementById("logout").click();
 
-  // var login = CheckWelcome(tokenStr == null ? "" : tokenStr);
-  // if (login == false) document.getElementById("logout").click();
+  var login = CheckWelcome(tokenStr == null ? "" : tokenStr);
+  if (login == false) document.getElementById("logout").click();
   setTimeout(function () {
     document.getElementById("loading").classList.add("hidden");
     document.getElementById("tabpanel").classList.replace("hidden", "block");
