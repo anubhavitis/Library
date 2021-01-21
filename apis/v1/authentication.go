@@ -107,32 +107,32 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 //VerifyEmail func
-func VerifyEmail(f http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		tokenStr, ok := r.URL.Query()["token"]
-		var res utility.Result
+func VerifyEmail(w http.ResponseWriter, r *http.Request) {
+	tokenStr, ok := r.URL.Query()["token"]
+	var res utility.Result
 
-		if !ok || len(tokenStr[0]) < 1 {
-			res.Error = "token not found"
-			utility.SendResponse(w, http.StatusBadRequest, res)
-			return
-		}
-
-		NewUser, e := jwtauth.ExtractClaims(tokenStr[0])
-		if !e {
-			res.Error = "error while extracting values form token"
-			utility.SendResponse(w, http.StatusBadRequest, res)
-			return
-		}
-
-		if e := database.AddMember(NewUser); e != nil {
-			res.Error = fmt.Sprintf("%s", e)
-			utility.SendResponse(w, http.StatusExpectationFailed, res)
-			return
-		}
-
-		f.ServeHTTP(w, r)
+	if !ok || len(tokenStr[0]) < 1 {
+		res.Error = "token not found"
+		utility.SendResponse(w, http.StatusBadRequest, res)
+		return
 	}
+
+	NewUser, e := jwtauth.ExtractClaims(tokenStr[0])
+	if !e {
+		res.Error = "error while extracting values form token"
+		utility.SendResponse(w, http.StatusBadRequest, res)
+		return
+	}
+
+	if e := database.AddMember(NewUser); e != nil {
+		res.Error = fmt.Sprintf("%s", e)
+		utility.SendResponse(w, http.StatusExpectationFailed, res)
+		return
+	}
+
+	Newurl := "https://anubhavitis.github.io/Library"
+	html := `<html> <script> window.location.href ="` + Newurl + `"; </script> </html>`
+	fmt.Fprintln(w, html)
 }
 
 //Refresh handler
@@ -193,16 +193,4 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	utility.SendResponse(w, http.StatusAccepted, &utility.Result{Success: true})
 	return
-}
-
-//Verified handler
-func Verified(w http.ResponseWriter, r *http.Request) {
-
-	Newurl := "https://anubhavitis.github.io/Library"
-	html := `
-	<html> <head> </head> <body> </body> <script>
-	window.location.href ="` + Newurl + `";
-	</script> </html>`
-
-	fmt.Fprintln(w, html)
 }
