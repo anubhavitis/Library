@@ -17,6 +17,7 @@ type Member struct {
 	Email    string `json:"email"`
 	College  string `json:"college"`
 	Password string `json:"password"`
+	Picture  string `json:"picture"`
 }
 
 //GenerateUUID ..
@@ -67,7 +68,8 @@ func CreateMemberTable(db *sql.DB) error {
 		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		email varchar(255),
 		college varchar(255),
-		password varchar(255)
+		password varchar(255),
+		picture varchar(500)
 	);
 	`
 
