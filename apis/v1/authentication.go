@@ -48,13 +48,10 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:    "Token",
-		Value:   tokenstr,
-		Expires: time.Now().Add(30 * time.Minute),
-	})
-
 	res.Success = true
+	res.Body = map[string]interface{}{
+		"token": tokenstr,
+	}
 	utility.SendResponse(w, http.StatusAccepted, res)
 }
 
@@ -104,7 +101,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	res.Success = true
 	res.Body = map[string]interface{}{
-		"Action": "Check given email for confirmation",
+		"token": token,
 	}
 	utility.SendResponse(w, 200, res)
 }
@@ -127,6 +124,7 @@ func VerifyEmail(f http.HandlerFunc) http.HandlerFunc {
 			utility.SendResponse(w, http.StatusBadRequest, res)
 			return
 		}
+
 		if e := database.AddMember(NewUser); e != nil {
 			res.Error = fmt.Sprintf("%s", e)
 			utility.SendResponse(w, http.StatusExpectationFailed, res)
@@ -191,31 +189,20 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-//Homepage handler
-func Homepage(w http.ResponseWriter, r *http.Request) {
-	html := `
-	<html> <body> 
-		<h1> Welcome to TestAPIs </h1>
-		<a href="\signup"> SignUp</a>
-	</body> </html>`
-
-	fmt.Fprintln(w, html)
-
+//Welcome handler
+func Welcome(w http.ResponseWriter, r *http.Request) {
+	utility.SendResponse(w, http.StatusAccepted, &utility.Result{Success: true})
+	return
 }
 
 //Verified handler
 func Verified(w http.ResponseWriter, r *http.Request) {
+
 	Newurl := "https://anubhavitis.github.io/Library"
 	html := `
-	<html> <body> 
-		<h1> Thanks for signing up with Library! </h1>
-		<p> You'll be redirected to login page, else 
-		<a href="` + Newurl + `"> Click here</a> </p>
-	</body> 
-	<script>
-	setTimeout(function(){window.location.href ="` + Newurl + `"  }, 3000);
-	</script>
-	</html>`
+	<html> <head> </head> <body> </body> <script>
+	window.location.href ="` + Newurl + `";
+	</script> </html>`
 
 	fmt.Fprintln(w, html)
 }

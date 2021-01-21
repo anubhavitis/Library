@@ -26,16 +26,6 @@ func SendResponse(w http.ResponseWriter, code int, data interface{}) bool {
 	return false
 }
 
-//GetTokenFromCookie func
-func GetTokenFromCookie(r *http.Request) (string, error) {
-	c, err := r.Cookie("Token")
-	if err != nil {
-		return "", err
-	}
-	return c.Value, err
-
-}
-
 //GenerateUUID func
 func GenerateUUID() string {
 

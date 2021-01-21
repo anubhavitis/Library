@@ -25,7 +25,7 @@ func main() {
 	headers := handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"})
 	methods := handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE"})
 	origins := handlers.AllowedOrigins([]string{"*"})
-	r.HandleFunc("/", v1.Homepage)
+	r.HandleFunc("/", v1.Welcome)
 
 	r.HandleFunc("/signup", v1.SignUp)
 	r.HandleFunc("/googlesignup", v1.GoogleSignupHandler)
@@ -38,7 +38,7 @@ func main() {
 
 	r.HandleFunc("/signin", v1.SignIn)
 	r.HandleFunc("/refresh", v1.Refresh)
-	r.HandleFunc("/welcome", middleware.Auth(v1.Homepage))
+	r.HandleFunc("/welcome", middleware.Auth(v1.Welcome))
 	r.HandleFunc("/addbook", middleware.Auth(v1.AddBook))
 	r.HandleFunc("/deletebook", middleware.Auth(v1.DeleteBook))
 	r.HandleFunc("/updatebook", middleware.Auth(v1.UpdateBookInfo))

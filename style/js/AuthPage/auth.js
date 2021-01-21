@@ -15,8 +15,12 @@ export function Login() {
   fetch("https://libraryz.herokuapp.com/signin", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-      if (result.success == true)
+      if (result.success == true){
+        localStorage.setItem("token", result.body.token )
+        console.log(result.body.token)
         swal.fire("Welcome back!", "Your books waited for you!", "success");
+        window.location.href="https://anubhavitis.github.io/Library"
+      }
       else {
         swal.fire("Oh oh!", result.error, "error");
       }
@@ -66,6 +70,10 @@ export function Register() {
           "Check your email to complete your registration.",
           "success"
         );
+        /*
+        TODO
+        - Save JWT in local storage 
+        */
       else swal.fire("Uh Oh!", result.error, "error");
     });
 }
