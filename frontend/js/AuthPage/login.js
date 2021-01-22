@@ -1,3 +1,7 @@
+window.onload= function(){
+  localStorage.clear();
+}
+
 document.getElementById("signin").onsubmit = function (e) {
   Login(e);
 };

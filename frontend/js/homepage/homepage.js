@@ -19,16 +19,42 @@ window.onload = function () {
     document.getElementById("Lcontainer").innerHTML += loadCard;
 
   var token = localStorage.getItem("token");
-  if (token == null) document.getElementById("logout").click();
+  console.log("Token: " + token);
+  if (token == null) {
+    document.getElementById("logout").click();
+  }
 
-  tokenStr = JSON.parse(token);
-  CheckWelcome(tokenStr);
+  var tokenStr = JSON.parse(token);
 
-  setTimeout(function () {
-    document.getElementById("loading").classList.add("hidden");
-    document.getElementById("tabpanel").classList.replace("hidden", "block");
-    document
-      .getElementById("bookContainer")
-      .classList.replace("hidden", "block");
-  }, 2000);
+  console.log("Token string is: " + tokenStr);
+
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  var raw = JSON.stringify({ token: tokenStr });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  fetch("https://libraryz.herokuapp.com/welcome", requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+
+      if (!result.success) {
+        console.log("Problem at: " + result.success);
+        document.getElementById("logout").click();
+      } else {
+        document.getElementById("loading").classList.add("hidden");
+        document
+          .getElementById("tabpanel")
+          .classList.replace("hidden", "block");
+        document
+          .getElementById("bookContainer")
+          .classList.replace("hidden", "block");
+      }
+    });
 };
