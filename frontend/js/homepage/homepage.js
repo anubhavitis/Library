@@ -21,7 +21,7 @@ window.onload = function () {
   var token = localStorage.getItem("token");
   if (token == null) document.getElementById("logout").click();
 
-  tokenStr = JSON.parse();
+  tokenStr = JSON.parse(token);
   CheckWelcome(tokenStr);
 
   setTimeout(function () {
