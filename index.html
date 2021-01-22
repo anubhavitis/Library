@@ -73,7 +73,7 @@
                 href="#">Link #2</a>
               <a id="logout"
                 class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg hover:text-white hover:bg-gray-900"
-                href="./login.html">Logout</a>
+                href="./frontend/html/login.html">Logout</a>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@
     <div
       class="w-4/5 md:w-2/3  lg:w-1/2 mx-auto mt-10 flex justify-around rounded-md shadow-xl ring-1 ring-gray-100 p-1 mx-2 text-gray-500 font-semibold bg-gray-400">
       <div id="showAllBooks"
-        class=" flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer ">
+        class=" flex rounded-full md:rounded-md p-2 ">
         <svg class="h-6 w-6 bg-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -95,7 +95,7 @@
         <p class="text-sm m-auto mx-1 hidden md:block bg-gray-500"> All books</p>
       </div>
       <div id="showMyBooks"
-        class=" flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer">
+        class=" flex rounded-full md:rounded-md p-2">
         <svg class="h-6 w-6 bg-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -103,7 +103,7 @@
         </svg>
         <p class="text-sm m-auto mx-1 hidden md:block bg-gray-500"> My books</p>
       </div>
-      <div class="  flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer">
+      <div class="  flex rounded-full md:rounded-md p-2">
         <svg class="h-6 w-6 bg-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd"
             d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm11 1H6v8l4-2 4 2V6z"
@@ -111,7 +111,7 @@
         </svg>
         <p class="text-sm m-auto mx-1 hidden md:block bg-gray-500"> Saved</p>
       </div>
-      <div class=" flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer">
+      <div class=" flex rounded-full md:rounded-md p-2">
         <svg class="h-6 w-6 bg-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd"
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
@@ -170,7 +170,7 @@
     <div class="m-4 h-120 rounded-lg shadow-xl flex ring-1 ring-gray-50 bg-gray-100 hover:bg-gray-50">
       <div class="w-1/2 h-100">
         <a href="#">
-          <img class="h-full w-full rounded-l-lg" src="1.jpg" />
+          <img class="h-full w-full rounded-l-lg" src="./frontend/media/1.jpg" />
         </a>
       </div>
       <div class="p-4 w-1/2 rounded-r-lg text-left flex flex-col justify-between">
@@ -195,7 +195,7 @@
               clip-rule="evenodd" />
           </svg>
           <a href="#">
-            <img class="rounded-full h-12 w-12 border-2 border-blue-200" src="1.jpg" />
+            <img class="rounded-full h-12 w-12 border-2 border-blue-200" src="./frontend/media/1.jpg" />
           </a>
         </div>
       </div>
@@ -213,6 +213,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.13.0/dist/sweetalert2.all.min.js"></script> <!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 <!--Navbar Tailwind CDN-->
-<script type="module" src="./style/js/homepage/homepage.js"> </script> <!-- Personal -->
+<script type="module" src="/frontend/js/homepage/homepage.js"> </script> <!-- Personal -->
 
 </html>

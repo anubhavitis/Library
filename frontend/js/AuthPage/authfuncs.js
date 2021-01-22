@@ -1,4 +1,5 @@
-export function Login() {
+export function Login(e) {
+  e.preventDefault();
   var username = document.getElementById("login_uname").value;
   var password = document.getElementById("login_password").value;
 
