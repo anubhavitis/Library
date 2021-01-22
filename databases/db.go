@@ -57,19 +57,22 @@ func CreateMemberTable(db *sql.DB) error {
 	// if _, err := db.Exec("DROP TABLE users"); err != nil {
 	// 	return err
 	// }
+	// if _, err := db.Exec("DROP TABLE books"); err != nil {
+	// 	return err
+	// }
 
 	queryUsers := `
 	CREATE TABLE IF NOT EXISTS
 	users (
 		id INT PRIMARY KEY AUTO_INCREMENT,
-		username varchar(255),
+		username varchar(255) NOT NULL,
 		fname varchar(255),
 		lname varchar(255),
 		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		email varchar(255),
 		college varchar(255),
 		password varchar(255),
-		picture varchar(500)
+		picture varchar(500) DEFAULT "https://cutt.ly/AjJ7pCN"
 	);
 	`
 
@@ -77,7 +80,7 @@ func CreateMemberTable(db *sql.DB) error {
 		return err
 	}
 	fmt.Println("Users Created!")
-	// ShowUsers(db)
+	ShowUsers(db)
 	return nil
 
 }
@@ -96,7 +99,7 @@ func FindEmail(email string) (Member, error) {
 	defer res.Close()
 
 	for res.Next() {
-		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password); err != nil {
+		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password, &User.Picture); err != nil {
 			return User, err
 		}
 	}
@@ -118,7 +121,7 @@ func FindUser(uname string) (Member, error) {
 	defer res.Close()
 
 	for res.Next() {
-		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password); err != nil {
+		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password, &User.Picture); err != nil {
 			return User, err
 		}
 	}
@@ -131,7 +134,7 @@ func AddMember(mem Member) error {
 	q := `
 	INSERT INTO users
 	(username, fname, lname, email, college, password)
-	Values (?,?,?,?,?,?)
+	Values (?,?,?,?,?,?, ?)
 	`
 
 	if _, e := Mydb.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password); e != nil {
@@ -144,7 +147,7 @@ func AddMember(mem Member) error {
 //ShowUsers temp func
 func ShowUsers(db *sql.DB) {
 	var User Member
-
+	fmt.Println("Available users are: ")
 	query := `Select * from users`
 	res, e := db.Query(query)
 
@@ -155,9 +158,10 @@ func ShowUsers(db *sql.DB) {
 	defer res.Close()
 
 	for res.Next() {
-		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password); err != nil {
+		if err := res.Scan(&User.UID, &User.UserName, &User.Fname, &User.Lname, &User.Time, &User.Email, &User.College, &User.Password, &User.Picture); err != nil {
 			return
 		}
 		fmt.Println(User.UserName + " " + User.Password)
 	}
+	fmt.Println("#####################")
 }

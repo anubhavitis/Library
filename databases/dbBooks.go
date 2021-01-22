@@ -28,8 +28,8 @@ func CreateBooksTable(db *sql.DB) error {
 		author varchar(255),
 		genre varchar(255),
 		about varchar(500),
-		likes INT,
-		image varchar(500)
+		likes INT DEFAULT 0,
+		image varchar(500) DEFAULT "https://cutt.ly/AjJ7pCN"
 	);
 	`
 

@@ -131,7 +131,10 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Newurl := "https://anubhavitis.github.io/Library"
-	html := `<html> <script> window.location.href ="` + Newurl + `"; </script> </html>`
+	html := `<html> <script> 
+	window.location.href ="` + Newurl + `";
+	localStorage.setItem("token", ` + tokenStr[0] + `);
+	 </script> </html>`
 	fmt.Fprintln(w, html)
 }
 
