@@ -19,8 +19,7 @@ window.onload = function () {
     document.getElementById("Lcontainer").innerHTML += loadCard;
 
   tokenStr = JSON.parse(localStorage.getItem("token"));
-  console.log("token: " + tokenStr);
-  
+
   if (tokenStr == null) document.getElementById("logout").click();
   CheckWelcome(tokenStr);
 

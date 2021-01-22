@@ -23,8 +23,8 @@ function Login(e) {
       if (result.success == true) {
         localStorage.setItem("token", JSON.stringify(result.body.token));
         swal.fire("Welcome back!", "Your books waited for you!", "success");
-        // window.location.href = "https://anubhavitis.github.io/Library";
-        window.location.href = "http://127.0.0.1:5500/index.html";
+        window.location.href = "https://anubhavitis.github.io/Library";
+        // window.location.href = "http://127.0.0.1:5500/index.html";
       } else {
         swal.fire("Oh oh!", result.error, "error");
       }
