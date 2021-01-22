@@ -108,16 +108,16 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 //VerifyEmail func
 func VerifyEmail(w http.ResponseWriter, r *http.Request) {
-	tokenStr, ok := r.URL.Query()["token"]
+	tokenStr := r.FormValue("token")
 	var res utility.Result
 
-	if !ok || len(tokenStr[0]) < 1 {
+	if len(tokenStr) < 1 {
 		res.Error = "token not found"
 		utility.SendResponse(w, http.StatusBadRequest, res)
 		return
 	}
 
-	NewUser, e := jwtauth.ExtractClaims(tokenStr[0])
+	NewUser, e := jwtauth.ExtractClaims(tokenStr)
 	if !e {
 		res.Error = "error while extracting values form token"
 		utility.SendResponse(w, http.StatusBadRequest, res)
@@ -133,7 +133,7 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	Newurl := "https://anubhavitis.github.io/Library"
 	html := `<html> <script> 
 	window.location.href ="` + Newurl + `";
-	localStorage.setItem("token", ` + tokenStr[0] + `);
+	localStorage.setItem("token", ` + tokenStr + `);
 	 </script> </html>`
 	fmt.Fprintln(w, html)
 }
