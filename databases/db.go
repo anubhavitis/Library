@@ -72,7 +72,7 @@ func CreateMemberTable(db *sql.DB) error {
 		email varchar(255),
 		college varchar(255),
 		password varchar(255),
-		picture varchar(500) DEFAULT "https://cutt.ly/AjJ7pCN"
+		picture varchar(500)
 	);
 	`
 
@@ -133,11 +133,11 @@ func FindUser(uname string) (Member, error) {
 func AddMember(mem Member) error {
 	q := `
 	INSERT INTO users
-	(username, fname, lname, email, college, password)
+	(username, fname, lname, email, college, password, picture)
 	Values (?,?,?,?,?,?, ?)
 	`
 
-	if _, e := Mydb.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password); e != nil {
+	if _, e := Mydb.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password, "https://cutt.ly/AjJ7pCN"); e != nil {
 		return e
 	}
 
