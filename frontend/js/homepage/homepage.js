@@ -18,12 +18,11 @@ window.onload = function () {
   for (var i = 0; i < 9; i += 1)
     document.getElementById("Lcontainer").innerHTML += loadCard;
 
-  tokenStr = localStorage.getItem("token");
+  tokenStr = JSON.parse(localStorage.getItem("token"));
   console.log("token: " + tokenStr);
+  
   if (tokenStr == null) document.getElementById("logout").click();
-
-  var login = CheckWelcome(tokenStr == null ? "" : tokenStr);
-  if (login == false) document.getElementById("logout").click();
+  CheckWelcome(tokenStr);
 
   setTimeout(function () {
     document.getElementById("loading").classList.add("hidden");

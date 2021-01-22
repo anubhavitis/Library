@@ -27,11 +27,13 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 		}
 
 		err := json.NewDecoder(r.Body).Decode(&Token)
+
 		if err != nil {
 			res.Error = fmt.Sprintf("%s", err)
 			utility.SendResponse(w, http.StatusUnauthorized, res)
 			return
 		}
+
 		claims := &jwtauth.Claims{}
 
 		tkn, err := jwt.ParseWithClaims(Token.Tokenstr, claims, func(token *jwt.Token) (interface{}, error) {
@@ -46,7 +48,7 @@ func Auth(f http.HandlerFunc) http.HandlerFunc {
 
 		UserCheck, e := database.FindUser(claims.Username)
 
-		if (!tkn.Valid || e != nil || UserCheck != database.Member{}) {
+		if (!tkn.Valid || e != nil || UserCheck == database.Member{}) {
 			if e != nil {
 				res.Error = fmt.Sprintf("%s", e)
 				utility.SendResponse(w, http.StatusUnauthorized, res)

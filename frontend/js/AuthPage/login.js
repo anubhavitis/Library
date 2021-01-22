@@ -3,7 +3,6 @@ document.getElementById("signin").onsubmit = function (e) {
 };
 
 function Login(e) {
-  console.log("e: " + e);
   e.preventDefault();
   var username = document.getElementById("login_uname").value;
   var password = document.getElementById("login_password").value;
@@ -22,9 +21,10 @@ function Login(e) {
     .then((response) => response.json())
     .then((result) => {
       if (result.success == true) {
-        localStorage.setItem("token", result.body.token);
+        localStorage.setItem("token", JSON.stringify(result.body.token));
         swal.fire("Welcome back!", "Your books waited for you!", "success");
-        window.location.href = "https://anubhavitis.github.io/Library";
+        // window.location.href = "https://anubhavitis.github.io/Library";
+        window.location.href = "http://127.0.0.1:5500/index.html";
       } else {
         swal.fire("Oh oh!", result.error, "error");
       }

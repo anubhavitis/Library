@@ -47,7 +47,7 @@ function Register(e) {
           "Check your email to complete your registration.",
           "success"
         );
-        localStorage.setItem("token", result.body.token);
+        localStorage.setItem("token", JSON.stringify(result.body.token));
       } else swal.fire("Uh Oh!", result.error, "error");
     });
 }
