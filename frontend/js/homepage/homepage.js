@@ -24,7 +24,7 @@ window.onload = function () {
 
   var login = CheckWelcome(tokenStr == null ? "" : tokenStr);
   if (login == false) document.getElementById("logout").click();
-  
+
   setTimeout(function () {
     document.getElementById("loading").classList.add("hidden");
     document.getElementById("tabpanel").classList.replace("hidden", "block");
