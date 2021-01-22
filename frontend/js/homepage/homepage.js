@@ -18,9 +18,10 @@ window.onload = function () {
   for (var i = 0; i < 9; i += 1)
     document.getElementById("Lcontainer").innerHTML += loadCard;
 
-  tokenStr = JSON.parse(localStorage.getItem("token"));
+  var token = localStorage.getItem("token");
+  if (token == null) document.getElementById("logout").click();
 
-  if (tokenStr == null) document.getElementById("logout").click();
+  tokenStr = JSON.parse();
   CheckWelcome(tokenStr);
 
   setTimeout(function () {
