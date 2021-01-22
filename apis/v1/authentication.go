@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/anubhavitis/Library/apis/middleware"
 	"github.com/anubhavitis/Library/apis/utility"
 	DB "github.com/anubhavitis/Library/databases"
 	database "github.com/anubhavitis/Library/databases"
@@ -17,7 +16,7 @@ import (
 
 //SignIn handler
 func SignIn(w http.ResponseWriter, r *http.Request) {
-	var cred middleware.UserCred
+	var cred utility.UserCred
 	var res utility.Result
 	if e := json.NewDecoder(r.Body).Decode(&cred); e != nil {
 		res.Error = fmt.Sprintf("%s", e)
@@ -194,6 +193,53 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 //Welcome handler
 func Welcome(w http.ResponseWriter, r *http.Request) {
+	var res utility.Result
+
+	var Token struct {
+		Tokenstr string `json:"token"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&Token)
+
+	if err != nil {
+		res.Error = fmt.Sprintf("%s", err)
+		utility.SendResponse(w, http.StatusUnauthorized, res)
+		return
+	}
+
+	claims := &jwtauth.Claims{}
+
+	tkn, err := jwt.ParseWithClaims(Token.Tokenstr, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtauth.JwtKey, nil
+	})
+
+	if err != nil {
+		res.Error = fmt.Sprintf("%s", err)
+		utility.SendResponse(w, http.StatusUnauthorized, res)
+		return
+	}
+
+	UserCheck, e := database.FindUser(claims.Username)
+
+	if (!tkn.Valid || e != nil || UserCheck == database.Member{}) {
+		if e != nil {
+			res.Error = fmt.Sprintf("%s", e)
+			utility.SendResponse(w, http.StatusUnauthorized, res)
+			return
+		}
+		res.Error = "not authorised, please sign in"
+		utility.SendResponse(w, http.StatusUnauthorized, res)
+		return
+	}
+
+	res.Success = true
+	res.Body = map[string]interface{}{
+		"username": UserCheck.UserName,
+		"fname":    UserCheck.Fname,
+		"sname":    UserCheck.Lname,
+		"image":    UserCheck.Picture,
+	}
+
 	utility.SendResponse(w, http.StatusAccepted, &utility.Result{Success: true})
 	return
 }

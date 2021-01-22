@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/anubhavitis/Library/apis/middleware"
 	v1 "github.com/anubhavitis/Library/apis/v1"
 	database "github.com/anubhavitis/Library/databases"
 	_ "github.com/go-sql-driver/mysql"
@@ -38,11 +37,11 @@ func main() {
 
 	r.HandleFunc("/signin", v1.SignIn)
 	r.HandleFunc("/refresh", v1.Refresh)
-	r.HandleFunc("/welcome", middleware.Auth(v1.Welcome))
-	r.HandleFunc("/addbook", middleware.Auth(v1.AddBook))
-	r.HandleFunc("/deletebook", middleware.Auth(v1.DeleteBook))
-	r.HandleFunc("/updatebook", middleware.Auth(v1.UpdateBookInfo))
-	r.HandleFunc("/getallbook", middleware.Auth(v1.GetBook))
+	r.HandleFunc("/welcome", v1.Welcome)
+	r.HandleFunc("/addbook", v1.AddBook)
+	r.HandleFunc("/deletebook", v1.DeleteBook)
+	r.HandleFunc("/updatebook", v1.UpdateBookInfo)
+	r.HandleFunc("/getallbook", v1.GetBook)
 	http.Handle("/", handlers.CORS(headers, methods, origins)(r))
 
 	port := os.Getenv("PORT")

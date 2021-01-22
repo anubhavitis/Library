@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/anubhavitis/Library/apis/middleware"
 	"github.com/anubhavitis/Library/apis/utility"
 	Db "github.com/anubhavitis/Library/databases"
 )
@@ -75,7 +74,7 @@ func UpdateBookInfo(w http.ResponseWriter, r *http.Request) {
 //GetBook func
 func GetBook(w http.ResponseWriter, r *http.Request) {
 	var res utility.Result
-	var user middleware.UserCred
+	var user utility.UserCred
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		res.Error = fmt.Sprintf("%s", err)

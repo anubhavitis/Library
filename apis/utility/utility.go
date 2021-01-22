@@ -26,6 +26,12 @@ func SendResponse(w http.ResponseWriter, code int, data interface{}) bool {
 	return false
 }
 
+//UserCred as expected User Credential while login
+type UserCred struct {
+	Password string `json:"password"`
+	Username string `json:"username"`
+}
+
 //GenerateUUID func
 func GenerateUUID() string {
 

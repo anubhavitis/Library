@@ -1,6 +1,7 @@
 import { CheckWelcome } from "./dashboadAuth.js";
 import { loadCard } from "./store.js";
-var tokenStr;
+
+var username, fname, sname, image;
 
 tippy("#showAllBooks", {
   content: "View all books",
@@ -45,9 +46,14 @@ window.onload = function () {
       console.log(result);
 
       if (!result.success) {
-        console.log("Problem at: " + result.success);
         document.getElementById("logout").click();
       } else {
+        username = result.body.username;
+        fname = result.body.fname;
+        sname = result.body.sname;
+
+        var title = document.createElement("title");
+        title.innerHTML = fname + "'s Dashboard";
         document.getElementById("loading").classList.add("hidden");
         document
           .getElementById("tabpanel")
