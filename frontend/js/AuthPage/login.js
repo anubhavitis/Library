@@ -49,6 +49,7 @@ function Login(e) {
         // window.location.href = "http://127.0.0.1:5500/index.html";
       } else {
         swal.fire("Oh oh!", result.error, "error");
+        button.disabled = false;
       }
     });
 }
