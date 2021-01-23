@@ -134,10 +134,10 @@ func AddMember(mem Member) error {
 	q := `
 	INSERT INTO users
 	(username, fname, lname, email, college, password, picture)
-	Values (?,?,?,?,?,?, ?)
+	Values (?,?,?,?,?,?,?)
 	`
-
-	if _, e := Mydb.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password, "https://cutt.ly/AjJ7pCN"); e != nil {
+	imgUrl := "https://cutt.ly/AjJ7pCN"
+	if _, e := Mydb.Exec(q, mem.UserName, mem.Fname, mem.Lname, mem.Email, mem.College, mem.Password, imgUrl); e != nil {
 		return e
 	}
 

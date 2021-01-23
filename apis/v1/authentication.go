@@ -239,7 +239,7 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 		"sname":    UserCheck.Lname,
 		"image":    UserCheck.Picture,
 	}
-
-	utility.SendResponse(w, http.StatusAccepted, &utility.Result{Success: true})
+	fmt.Println(res)
+	utility.SendResponse(w, http.StatusAccepted, res)
 	return
 }

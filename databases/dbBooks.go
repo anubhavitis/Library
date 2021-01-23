@@ -49,7 +49,9 @@ func AddBook(book Book) error {
 	(name, owner, author, genre, about, likes, image)
 	Values (?,?,?,?,?,?,?)
 	`
-
+	if book.Image == "" {
+		book.Image = "https://cutt.ly/AjJ7pCN"
+	}
 	if _, e := Mydb.Exec(q, book.Name, book.Owner, book.Author, book.Genre, book.About, book.Likes, book.Image); e != nil {
 		return e
 	}

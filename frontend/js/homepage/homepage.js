@@ -20,15 +20,11 @@ window.onload = function () {
     document.getElementById("Lcontainer").innerHTML += loadCard;
 
   var token = localStorage.getItem("token");
-  console.log("Token: " + token);
   if (token == null) {
     document.getElementById("logout").click();
   }
 
   var tokenStr = JSON.parse(token);
-
-  console.log("Token string is: " + tokenStr);
-
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   var raw = JSON.stringify({ token: tokenStr });
@@ -43,7 +39,6 @@ window.onload = function () {
   fetch("https://libraryz.herokuapp.com/welcome", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-      console.log(result);
 
       if (!result.success) {
         document.getElementById("logout").click();
