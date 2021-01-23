@@ -1,19 +1,19 @@
-import { CheckWelcome } from "./dashboadAuth.js";
+import {
+  addtippy,
+  AddBook,
+  showAllBooks,
+  addBooks,
+  AllBooks,
+  MyBooks,
+  SavedBooks,
+  showMyBooks,
+  showSavedBooks,
+} from "./buttons.js";
+
 import { loadCard } from "./store.js";
+import { NewBook } from "./tabFuncs.js";
 
 var username, fname, sname, image;
-
-tippy("#showAllBooks", {
-  content: "View all books",
-  followCursor: "horizontal",
-  animation: "shift-away",
-});
-
-tippy("#showMyBooks", {
-  content: "View my books",
-  followCursor: "horizontal",
-  animation: "shift-away",
-});
 
 window.onload = function () {
   for (var i = 0; i < 9; i += 1)
@@ -39,7 +39,6 @@ window.onload = function () {
   fetch("https://libraryz.herokuapp.com/welcome", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-
       if (!result.success) {
         document.getElementById("logout").click();
       } else {
@@ -47,15 +46,31 @@ window.onload = function () {
         fname = result.body.fname;
         sname = result.body.sname;
 
-        var title = document.createElement("title");
-        title.innerHTML = fname + "'s Dashboard";
+        document.getElementById("title").innerHTML = fname + "'s Dashboard";
         document.getElementById("loading").classList.add("hidden");
-        document
-          .getElementById("tabpanel")
-          .classList.replace("hidden", "block");
-        document
-          .getElementById("bookContainer")
-          .classList.replace("hidden", "block");
+        document.getElementById("tabpanel").classList.remove("hidden");
+        document.getElementById("bookContainer").classList.remove("hidden");
+        addtippy();
+        AllBooks();
       }
     });
 };
+
+addBooks.onclick = function () {
+  AddBook();
+};
+showAllBooks.onclick = function () {
+  AllBooks();
+};
+
+showMyBooks.onclick= function(){
+  MyBooks();
+};
+
+showSavedBooks.onclick= function(){
+  SavedBooks();
+}
+
+document.getElementById("bookForm").onsubmit= function(e){
+  NewBook(username, e);
+}

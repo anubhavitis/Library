@@ -4,6 +4,7 @@
 <head>
   <!-- ... -->
   <meta charset="UTF-8" />
+  <title id="title"> Dashboard </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
 </head>
@@ -73,7 +74,7 @@
                 href="#">Link #2</a>
               <a id="logout"
                 class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg hover:text-white hover:bg-gray-900"
-                href="./frontend/html/login.html">Logout</a>
+                href="./frontend/html/authentication/login.html">Logout</a>
             </div>
           </div>
         </div>
@@ -85,7 +86,7 @@
   <div id="loading" class="animate-pulse">
     <div
       class="w-4/5 md:w-2/3  lg:w-1/2 mx-auto mt-10 flex justify-around rounded-md shadow-xl ring-1 ring-gray-100 p-1 mx-2 text-gray-500 font-semibold bg-gray-400">
-      <div id="showAllBooks" class=" flex rounded-full md:rounded-md p-2 ">
+      <div class=" flex rounded-full md:rounded-md p-2 ">
         <svg class="h-6 w-6 bg-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -94,7 +95,7 @@
         </svg>
         <p class="text-sm m-auto mx-1 hidden md:block bg-gray-500"> All books</p>
       </div>
-      <div id="showMyBooks" class=" flex rounded-full md:rounded-md p-2">
+      <div class=" flex rounded-full md:rounded-md p-2">
         <svg class="h-6 w-6 bg-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -116,20 +117,22 @@
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
             clip-rule="evenodd" />
         </svg>
-        <p class="text-sm m-auto mx-1 hidden md:block bg-gray-500"> Add book</p>
+        <p class="text-sm m-auto mx-1 hidden md:block bg-gray-500">
+          Add book
+        </p>
       </div>
     </div>
 
     <div id="Lcontainer"
-      class=" container mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
+      class="p-2 rounded-xl bg-gray-100 container mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
     </div>
   </div>
 
   <!-- This is tabpanel -->
   <div id="tabpanel"
-    class=" hidden w-4/5 md:w-2/3  lg:w-1/2 mx-auto mt-10 flex justify-around rounded-md shadow-xl ring-1 ring-gray-100 p-1 mx-2 text-gray-500 font-semibold">
+    class=" hidden w-4/5 md:w-2/3  lg:w-1/2 mx-auto mt-10 flex justify-around rounded-md shadow-xl ring-1 ring-gray-100 p-2 mx-2 text-gray-500 font-semibold">
     <div id="showAllBooks"
-      class=" flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer ">
+      class="flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white focus:bg-gray-400 focus:text-white cursor-pointer ">
       <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -145,7 +148,7 @@
       </svg>
       <p class="text-sm m-auto mx-1 hidden md:block"> My books</p>
     </div>
-    <div class="  flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer">
+    <div id="saved" class="  flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer">
       <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd"
           d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm11 1H6v8l4-2 4 2V6z"
@@ -153,7 +156,7 @@
       </svg>
       <p class="text-sm m-auto mx-1 hidden md:block"> Saved</p>
     </div>
-    <div class=" flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer">
+    <div id="addbook" class=" flex rounded-full md:rounded-md p-2 hover:bg-gray-400 hover:text-white cursor-pointer">
       <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd"
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
@@ -163,12 +166,66 @@
     </div>
   </div>
 
+  <!--Add book form-->
+  <div id="addBookDiv" class="hidden p-2 rounded-xl bg-gray-100 container mx-auto my-auto md:px-20 mt-4 ">
+    <div class=" rounded-lg">
+      <p class="uppercase font-bold text-center text-2xl my-4 text-gray-600"> Add your book!
+        <hr>
+      </p>
+    </div>
+    <form id="bookForm">
+      <div class="flex flex-col md:flex-row mt-4">
+        <div class="px-3 py-2 m-auto w-full md:w-2/5 text-left "> <label> Book title</label> </div>
+        <div class="w-full md:w-3/5"><input
+            class="shadow-xl w-full px-3 py-2 border-blue-400 border-2 text-sm text-blue-700 leading-tight rounded shadow appearance-none focus:outline-none focus:shadow-outline m-1"
+            id="bookName" type="text" placeholder="Enter book title" required /></div>
+      </div>
+      <div class="flex flex-col md:flex-row mt-4">
+        <div class="px-3 py-2 m-auto w-full md:w-2/5 text-left "> <label> Author </label> </div>
+        <div class="w-full md:w-3/5"><input
+            class="shadow-xl w-full px-3 py-2 border-blue-400 border-2 text-sm text-blue-700 leading-tight rounded shadow appearance-none focus:outline-none focus:shadow-outline m-1"
+            id="bookAuthor" type="text" placeholder="Enter Author name" required /></div>
+      </div>
+      <div class="flex flex-col md:flex-row mt-4">
+        <div class="px-3 py-2 m-auto w-full md:w-2/5 text-left "> <label> Genre</label> </div>
+        <div class="w-full md:w-3/5"><input
+            class="shadow-xl w-full px-3 py-2 border-blue-400 border-2 text-sm text-blue-700 leading-tight rounded shadow appearance-none focus:outline-none focus:shadow-outline m-1"
+            id="bookGenre" type="text" placeholder="Genre (Seprated by comma ) E.g. Thrill, Drama" required /></div>
+      </div>
+      <div class="flex flex-col md:flex-row mt-4">
+        <div class="px-3 py-2 m-auto w-full md:w-2/5 text-left "> <label> Book Description</label> </div>
+        <div class="w-full md:w-3/5"><input
+            class="shadow-xl w-full px-3 py-2 border-blue-400 border-2 text-sm text-blue-700 leading-tight rounded shadow appearance-none focus:outline-none focus:shadow-outline m-1"
+            id="bookAbout" type="text" placeholder="Why do you like this book?" required /></div>
+      </div>
+      <div class="flex flex-col md:flex-row mt-4">
+        <div class="px-3 py-2 m-auto w-full md:w-2/5 text-left ">
+          <label class="flex ">
+            <p class="mr-2">Book Image </p>
+            <p class="text-gray-400 uppercase ml-2"> (optional)</p>
+          </label>
+        </div>
+        <div class="w-full md:w-3/5 bg-transparent">
+          <input id="bookImage" class="w-full px-3 py-2 text-sm text-blue-700 rounded shadow appearance-none m-1" id="bookAbout"
+            type="file" placeholder="Why do you like this book?" accept="image/x-png,image/gif,image/jpeg" />
+        </div>
+      </div>
+      <div class="text-center my-4">
+        <button id="addBookButton" type="submit"
+          class=" px-10 py-2 font-bold text-white bg-blue-500 active:bg-blue-900 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline">
+          ADD BOOK
+        </button>
+      </div>
+
+    </form>
+  </div>
+
   <!-- This is show container -->
   <div id="bookContainer"
-    class="hidden container mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
+    class="hidden p-2 rounded-xl bg-gray-100  container mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
 
-    <!--card Div-->
-    <div class="m-4 h-120 rounded-lg shadow-xl flex ring-1 ring-gray-50 bg-gray-100 hover:bg-gray-50">
+
+    <div class="m-4 h-120 rounded-lg shadow-xl flex ring-2 ring-gray-200 bg-gray-100 hover:bg-gray-200">
       <div class="w-1/2 h-100">
         <a href="#">
           <img class="h-full w-full rounded-l-lg" src="./frontend/media/1.jpg" />

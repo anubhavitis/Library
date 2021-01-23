@@ -21,7 +21,7 @@ function Register(e) {
 
   var butt = document.getElementById("register");
   butt.innerHTML = loadingDiv;
-
+  butt.disabled = true;
   var email = document.getElementById("new_email").value;
   var uname = document.getElementById("new_uname").value;
   var fname = document.getElementById("new_fname").value;
@@ -65,7 +65,10 @@ function Register(e) {
           "success"
         );
         localStorage.setItem("token", JSON.stringify(result.body.token));
-      } else swal.fire("Uh Oh!", result.error, "error");
+      } else {
+        swal.fire("Uh Oh!", result.error, "error");
+        butt.disabled = false;
+      }
     });
 }
 
