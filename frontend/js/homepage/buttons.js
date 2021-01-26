@@ -65,7 +65,7 @@ export function AllBooks() {
     redirect: "follow",
   };
 
-  fetch("http://localhost:8000/welcome", requestOptions)
+  fetch("https://libraryz.herokuapp.com/welcome", requestOptions)
     .then((response) => response.json())
     .then((result) => {
       if (!result.success) {
