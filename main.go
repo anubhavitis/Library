@@ -38,10 +38,11 @@ func main() {
 	r.HandleFunc("/signin", v1.SignIn)
 	r.HandleFunc("/refresh", v1.Refresh)
 	r.HandleFunc("/welcome", v1.Welcome)
-	r.HandleFunc("/addbook", v1.AddBook)
-	r.HandleFunc("/deletebook", v1.DeleteBook)
-	r.HandleFunc("/updatebook", v1.UpdateBookInfo)
-	r.HandleFunc("/getallbook", v1.GetBook)
+
+	r.Handle("/addbook", v1.Auth(v1.AddBook))
+	r.Handle("/deletebook", v1.Auth(v1.DeleteBook))
+	r.Handle("/updatebook", v1.Auth(v1.UpdateBookInfo))
+	r.Handle("/getallbook", v1.Auth(v1.GetBook))
 	http.Handle("/", handlers.CORS(headers, methods, origins)(r))
 
 	port := os.Getenv("PORT")

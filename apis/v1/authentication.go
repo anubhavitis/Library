@@ -191,7 +191,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-//Welcome handler
+//Welcome Handler
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	var res utility.Result
 
@@ -208,7 +208,6 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := &jwtauth.Claims{}
-
 	tkn, err := jwt.ParseWithClaims(Token.Tokenstr, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtauth.JwtKey, nil
 	})
@@ -232,14 +231,20 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	book, err := database.GetAllBook()
+	if err != nil {
+		res.Error = fmt.Sprintf("%s", err)
+		utility.SendResponse(w, http.StatusConflict, res)
+	}
+
 	res.Success = true
 	res.Body = map[string]interface{}{
 		"username": UserCheck.UserName,
 		"fname":    UserCheck.Fname,
 		"sname":    UserCheck.Lname,
 		"image":    UserCheck.Picture,
+		"book":     book,
 	}
-	fmt.Println(res)
 	utility.SendResponse(w, http.StatusAccepted, res)
 	return
 }

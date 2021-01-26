@@ -37,6 +37,8 @@ func CreateBooksTable(db *sql.DB) error {
 		fmt.Println("Books can not be created!")
 		return err
 	}
+
+	// ShowBooks(db)
 	fmt.Println("Books Created!")
 	return nil
 }
@@ -83,6 +85,30 @@ func ListUserBooks(uname string) ([]Book, error) {
 	return books, nil
 }
 
+//GetAllBook func
+func GetAllBook() ([]Book, error) {
+	var books []Book
+
+	query := `Select * from books`
+	res, e := Mydb.Query(query)
+
+	if e != nil {
+		return books, e
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		var t Book
+		if err := res.Scan(&t.UID, &t.Name, &t.Owner, &t.Author, &t.Genre, &t.About, &t.Likes, &t.Image); err != nil {
+			return books, nil
+		}
+		books = append(books, t)
+	}
+
+	return books, nil
+}
+
 //DeleteBook func
 func DeleteBook(id string) (bool, error) {
 	q := `DELETE from books WHERE id=?`
@@ -103,4 +129,26 @@ func UpdateBook(book Book) (bool, error) {
 		return false, e
 	}
 	return true, nil
+}
+
+//ShowBooks temp func
+func ShowBooks(db *sql.DB) {
+	var uname, owner string
+	fmt.Println("Available books are: ")
+	query := `Select name, owner from books`
+	res, e := db.Query(query)
+
+	if e != nil {
+		return
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		if err := res.Scan(&uname, &owner); err != nil {
+			return
+		}
+		fmt.Println(uname + " " + owner)
+	}
+	fmt.Println("#####################")
 }
