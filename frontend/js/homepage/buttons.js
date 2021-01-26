@@ -76,6 +76,7 @@ export function AllBooks() {
         fname = result.body.fname;
         sname = result.body.sname;
         var arr = result.body.book;
+        console.log(arr)
         var bookCards = "";
         arr.forEach((ele) => {
           var Card = `
@@ -139,7 +140,6 @@ export function AllBooks() {
         document.getElementById("loading").classList.add("hidden");
         document.getElementById("tabpanel").classList.remove("hidden");
         document.getElementById("bookContainer").classList.remove("hidden");
-        addtippy();
       }
     });
 }

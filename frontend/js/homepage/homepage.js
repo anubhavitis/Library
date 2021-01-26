@@ -14,12 +14,12 @@ import {
 import { loadCard } from "./store.js";
 import { NewBook } from "./tabFuncs.js";
 
-
 window.onload = function () {
   for (var i = 0; i < 9; i += 1)
     document.getElementById("Lcontainer").innerHTML += loadCard;
 
-  AllBooks()
+  AllBooks();
+  addtippy();
 };
 
 addBooks.onclick = function () {
